@@ -2,8 +2,10 @@
 <html lang="vi">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, viewport-fit=cover">
   <meta name="theme-color" content="#FFD6E7">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
   <meta name="description" content="Love Paws — Game Truth or Dare lãng mạn, ngọt ngào dành cho các cặp đôi.">
   <title>Love Paws — Truth, Dare & Choose 💗🐱</title>
 
@@ -53,10 +55,12 @@
     html {
       font-size: 16px;
       scroll-behavior: smooth;
+      -webkit-text-size-adjust: 100%;
     }
 
     body {
       min-height: 100vh;
+      min-height: -webkit-fill-available;
       min-height: 100dvh;
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji";
       background: linear-gradient(135deg, #FFF8F3 0%, #FFD6E7 42%, #FFF0F5 72%, #DCD6FF 100%);
@@ -69,6 +73,7 @@
       overflow-x: hidden;
       position: relative;
       line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
     }
 
     /* Accessibility focus ring */
@@ -83,6 +88,9 @@
       border: none;
       background: none;
       user-select: none;
+      -webkit-user-select: none;
+      touch-action: manipulation;
+      -webkit-touch-callout: none;
     }
 
     /* ==========================================================================
@@ -125,17 +133,21 @@
     }
 
     /* ==========================================================================
-       4. LAYOUT & APP CONTAINER
+       4. LAYOUT & APP CONTAINER (IPHONE 13 PRO & SAFE AREA COMPLIANT)
        ========================================================================== */
     .app-container {
       position: relative;
       z-index: 1;
       width: 100%;
-      max-width: 500px;
-      padding: 16px 16px 36px;
+      max-width: 480px;
+      padding-top: max(16px, env(safe-area-inset-top));
+      padding-bottom: max(26px, env(safe-area-inset-bottom));
+      padding-left: max(16px, env(safe-area-inset-left));
+      padding-right: max(16px, env(safe-area-inset-right));
       display: flex;
       flex-direction: column;
       min-height: 100vh;
+      min-height: -webkit-fill-available;
       min-height: 100dvh;
       margin: 0 auto;
     }
@@ -554,9 +566,223 @@
       animation: feedbackFade 0.3s ease-out;
     }
 
-    @keyframes feedbackFade {
-      0% { opacity: 0; transform: translateY(4px); }
-      100% { opacity: 1; transform: translateY(0); }
+    /* ==========================================================================
+       8B. WELCOME / INITIAL STATE VIEW (WHEN NO MODE IS OPEN)
+       ========================================================================== */
+    .welcome-view {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      padding: 10px 4px;
+      animation: cardPopIn 0.35s ease;
+    }
+
+    .welcome-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(255, 214, 231, 0.65);
+      color: var(--color-cherry);
+      font-size: 0.82rem;
+      font-weight: 700;
+      padding: 4px 12px;
+      border-radius: var(--radius-full);
+      margin-bottom: 8px;
+    }
+
+    .welcome-title {
+      font-size: 1.25rem;
+      font-weight: 800;
+      color: var(--color-cherry);
+      margin-bottom: 5px;
+    }
+
+    .welcome-desc {
+      font-size: 0.88rem;
+      color: var(--color-text-muted);
+      line-height: 1.45;
+      margin-bottom: 14px;
+      max-width: 340px;
+    }
+
+    .welcome-options {
+      display: flex;
+      flex-direction: column;
+      gap: 9px;
+      width: 100%;
+    }
+
+    .welcome-opt-card {
+      background: #FFFFFF;
+      border: 1.5px solid rgba(255, 214, 231, 0.8);
+      border-radius: var(--radius-md);
+      padding: 11px 13px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      cursor: pointer;
+      text-align: left;
+      box-shadow: 0 3px 8px rgba(0, 0, 0, 0.03);
+      transition: var(--transition-smooth);
+    }
+
+    .welcome-opt-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 16px rgba(255, 107, 154, 0.22);
+      border-color: var(--color-pink-deep);
+    }
+
+    .welcome-opt-card:active {
+      transform: translateY(1px);
+    }
+
+    .opt-icon-wrap {
+      width: 38px;
+      height: 38px;
+      min-width: 38px;
+      border-radius: var(--radius-sm);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.3rem;
+    }
+
+    .opt-truth .opt-icon-wrap { background: #FFE4EE; }
+    .opt-dare .opt-icon-wrap { background: #FFDEE9; }
+    .opt-choose .opt-icon-wrap { background: #EBE5FF; }
+
+    .opt-info { flex: 1; }
+
+    .opt-title {
+      font-size: 0.94rem;
+      font-weight: 800;
+      line-height: 1.25;
+    }
+
+    .opt-truth .opt-title { color: #E84A72; }
+    .opt-dare .opt-title { color: #D63384; }
+    .opt-choose .opt-title { color: #7B42BC; }
+
+    .opt-sub {
+      font-size: 0.77rem;
+      color: var(--color-text-muted);
+      margin-top: 2px;
+      line-height: 1.3;
+    }
+
+    .opt-arrow {
+      color: var(--color-pink-deep);
+      font-size: 1.1rem;
+      font-weight: 700;
+      transition: transform 0.2s ease;
+    }
+
+    .welcome-opt-card:hover .opt-arrow {
+      transform: translateX(3px);
+    }
+
+    /* ==========================================================================
+       8C. RANDOM SHUFFLE ANIMATION VIEW
+       ========================================================================== */
+    .shuffling-view {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 24px 10px;
+      min-height: 210px;
+    }
+
+    .shuffling-dice-wrap {
+      width: 64px;
+      height: 64px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #FFF0F5 0%, #FFD6E7 100%);
+      box-shadow: 0 8px 24px rgba(255, 107, 154, 0.35);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 12px;
+      animation: dicePulse 0.5s ease-in-out infinite alternate;
+    }
+
+    .shuffling-dice {
+      font-size: 2.1rem;
+      display: inline-block;
+      animation: diceSpin 0.6s cubic-bezier(0.68, -0.55, 0.27, 1.55) infinite;
+    }
+
+    @keyframes diceSpin {
+      0% { transform: rotate(0deg) scale(0.9); }
+      50% { transform: rotate(180deg) scale(1.15); }
+      100% { transform: rotate(360deg) scale(0.9); }
+    }
+
+    @keyframes dicePulse {
+      0% { transform: scale(0.95); box-shadow: 0 4px 14px rgba(255, 107, 154, 0.25); }
+      100% { transform: scale(1.05); box-shadow: 0 10px 28px rgba(232, 74, 114, 0.45); }
+    }
+
+    .shuffling-title {
+      font-size: 1.15rem;
+      font-weight: 800;
+      color: var(--color-cherry);
+      margin-bottom: 4px;
+      animation: textGlow 1s ease infinite alternate;
+    }
+
+    @keyframes textGlow {
+      0% { opacity: 0.85; }
+      100% { opacity: 1; text-shadow: 0 0 10px rgba(255, 107, 154, 0.4); }
+    }
+
+    .shuffling-sub {
+      font-size: 0.84rem;
+      color: var(--color-text-muted);
+      margin-bottom: 16px;
+    }
+
+    .shuffling-loader {
+      width: 140px;
+      height: 6px;
+      background: rgba(255, 214, 231, 0.6);
+      border-radius: var(--radius-full);
+      overflow: hidden;
+      position: relative;
+    }
+
+    .shuffling-bar {
+      position: absolute;
+      top: 0;
+      left: 0;
+      height: 100%;
+      width: 40%;
+      background: linear-gradient(90deg, #FF6B9A, #E84A72);
+      border-radius: var(--radius-full);
+      animation: barSlide 0.7s ease-in-out infinite;
+    }
+
+    @keyframes barSlide {
+      0% { left: -40%; width: 30%; }
+      50% { left: 35%; width: 50%; }
+      100% { left: 100%; width: 30%; }
+    }
+
+    .game-card.animate-reveal {
+      animation: cardRevealPop 0.42s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    @keyframes cardRevealPop {
+      0% {
+        opacity: 0;
+        transform: scale(0.88) translateY(14px);
+      }
+      100% {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+      }
     }
 
     /* ==========================================================================
@@ -983,24 +1209,130 @@
     }
 
     /* ==========================================================================
-       15. RESPONSIVE & PREFERS-REDUCED-MOTION
+       15. RESPONSIVE (IPHONE 13 PRO & MOBILE) & PREFERS-REDUCED-MOTION
        ========================================================================== */
-    @media (max-width: 360px) {
+    @media screen and (max-width: 414px) {
+      .app-container {
+        padding-top: max(12px, env(safe-area-inset-top));
+        padding-bottom: max(20px, env(safe-area-inset-bottom));
+        padding-left: max(12px, env(safe-area-inset-left));
+        padding-right: max(12px, env(safe-area-inset-right));
+      }
+      .header {
+        margin-bottom: 8px;
+      }
+      .mascot-wrap {
+        width: 86px;
+        height: 66px;
+        margin-bottom: 2px;
+      }
       .app-title {
-        font-size: 1.35rem;
+        font-size: 1.42rem;
+      }
+      .app-subtitle {
+        font-size: 0.82rem;
+      }
+      .reminder-banner {
+        font-size: 0.74rem;
+        padding: 4px 10px;
+        margin: 4px auto 8px;
+      }
+      .mode-tabs {
+        gap: 6px;
+        margin-bottom: 12px;
+      }
+      .tab-btn {
+        padding: 8px 3px;
+        border-radius: 14px;
+      }
+      .tab-icon {
+        font-size: 1.25rem;
       }
       .tab-name {
-        font-size: 0.78rem;
+        font-size: 0.82rem;
+      }
+      .tab-tag {
+        font-size: 0.65rem;
+        padding: 1px 6px;
+      }
+      .game-card {
+        padding: 18px 15px 16px;
+        min-height: 225px;
+        border-radius: 20px;
       }
       .question-text {
-        font-size: 1.05rem;
+        font-size: 1.1rem;
+        line-height: 1.5;
+        margin: 2px 0 10px;
       }
-      .btn-next {
-        font-size: 0.98rem;
-        padding: 13px 18px;
+      .choose-container {
+        gap: 8px;
+        margin-top: 10px;
+      }
+      .choose-option-btn {
+        padding: 10px 12px;
+        border-radius: 14px;
+        gap: 10px;
+      }
+      .choose-letter {
+        width: 28px;
+        height: 28px;
+        min-width: 28px;
+        font-size: 0.88rem;
       }
       .choose-text {
+        font-size: 0.9rem;
+        line-height: 1.35;
+      }
+      .btn-next {
+        padding: 13px 20px;
+        font-size: 1rem;
+      }
+      .progress-section {
+        padding: 10px 12px;
+        margin-bottom: 12px;
+      }
+      .welcome-title {
+        font-size: 1.18rem;
+      }
+      .welcome-desc {
+        font-size: 0.82rem;
+        margin-bottom: 10px;
+      }
+      .welcome-opt-card {
+        padding: 9px 12px;
+        gap: 10px;
+      }
+      .opt-icon-wrap {
+        width: 34px;
+        height: 34px;
+        min-width: 34px;
+        font-size: 1.2rem;
+      }
+      .opt-title {
         font-size: 0.88rem;
+      }
+      .opt-sub {
+        font-size: 0.72rem;
+      }
+    }
+
+    @media (max-width: 360px) {
+      .app-title {
+        font-size: 1.3rem;
+      }
+      .tab-name {
+        font-size: 0.75rem;
+      }
+      .question-text {
+        font-size: 1.02rem;
+      }
+      .btn-next {
+        font-size: 0.94rem;
+        padding: 12px 16px;
+      }
+      .choose-text {
+        font-size: 0.84rem;
       }
     }
 
@@ -1108,7 +1440,7 @@
 
     <!-- 3 Mode Selection Tabs -->
     <nav class="mode-tabs" aria-label="Chọn chế độ chơi">
-      <button class="tab-btn active" data-mode="TRUTH" id="tabTruth" type="button" role="tab" aria-selected="true" aria-controls="cardContent">
+      <button class="tab-btn" data-mode="TRUTH" id="tabTruth" type="button" role="tab" aria-selected="false" aria-controls="cardContent">
         <span class="tab-icon">💗</span>
         <span class="tab-name">TRUTH</span>
         <span class="tab-tag" id="tabCountTruth">0/20</span>
@@ -1134,9 +1466,9 @@
 
     <!-- Primary Action Button -->
     <div class="primary-action-wrap">
-      <button class="btn-next" id="nextQuestionBtn" type="button">
-        <span id="nextBtnIcon">✨</span>
-        <span id="nextBtnText">Câu tiếp theo</span>
+      <button class="btn-next" id="nextQuestionBtn" type="button" disabled>
+        <span id="nextBtnIcon">🐾</span>
+        <span id="nextBtnText">Chạm vào chế độ để bắt đầu</span>
       </button>
     </div>
 
@@ -1433,7 +1765,7 @@
       function createDefaultState() {
         return {
           version: 1,
-          currentMode: "TRUTH",
+          currentMode: null, // Start with all modes closed, wait for user click
           currentQuestionId: {
             TRUTH: null,
             DARE: null,
@@ -1462,8 +1794,10 @@
 
         const clean = createDefaultState();
 
-        if (["TRUTH", "DARE", "CHOOSE"].includes(parsed.currentMode)) {
+        if (parsed.currentMode && ["TRUTH", "DARE", "CHOOSE"].includes(parsed.currentMode)) {
           clean.currentMode = parsed.currentMode;
+        } else {
+          clean.currentMode = null;
         }
 
         if (parsed.usedIds && typeof parsed.usedIds === "object") {
@@ -1536,14 +1870,12 @@
         }
 
         const soundPreference = gameState.soundEnabled;
-        gameState = createDefaultState();
+        gameState = createDefaultState(); // Reset back to initial welcome state (all closed)
         gameState.soundEnabled = soundPreference;
 
-        // Start with a fresh random TRUTH question
-        pickNextQuestion("TRUTH", false);
         saveGameState();
         renderGame();
-        showToast("🌸 Đã làm mới lượt chơi! Chúc hai bạn thật vui vẻ!");
+        showToast("🌸 Đã làm mới lượt chơi! Chọn một chế độ để bắt đầu nhé!");
       }
 
       /* ==========================================================================
@@ -1625,6 +1957,21 @@
               osc.start(start);
               osc.stop(start + 0.4);
             });
+          } else if (type === "shuffle") {
+            const freqs = [440, 523.25, 587.33, 659.25, 783.99];
+            freqs.forEach(function (f, i) {
+              const osc = ctx.createOscillator();
+              const gain = ctx.createGain();
+              osc.type = "sine";
+              const start = now + i * 0.1;
+              osc.frequency.setValueAtTime(f, start);
+              gain.gain.setValueAtTime(0.08, start);
+              gain.gain.exponentialRampToValueAtTime(0.001, start + 0.08);
+              osc.connect(gain);
+              gain.connect(ctx.destination);
+              osc.start(start);
+              osc.stop(start + 0.09);
+            });
           }
         } catch (e) {
           console.warn("Âm thanh bị chặn hoặc không được hỗ trợ:", e);
@@ -1632,8 +1979,20 @@
       }
 
       /* ==========================================================================
-         4. QUESTION SELECTION LOGIC
+         4. QUESTION SELECTION & TRUE RANDOM SHUFFLE LOGIC
          ========================================================================== */
+      let isShuffling = false;
+
+      // True random generator with CSPRNG fallback
+      function getRandomInt(max) {
+        if (window.crypto && window.crypto.getRandomValues) {
+          const array = new Uint32Array(1);
+          window.crypto.getRandomValues(array);
+          return array[0] % max;
+        }
+        return Math.floor(Math.random() * max);
+      }
+
       function getUnusedQuestionIds(modeKey) {
         const modeConf = MODES[modeKey];
         if (!modeConf) return [];
@@ -1658,8 +2017,8 @@
           return null;
         }
 
-        // Pick random from remaining unused IDs
-        const randomIndex = Math.floor(Math.random() * unused.length);
+        // True random pick among unused questions
+        const randomIndex = getRandomInt(unused.length);
         const pickedId = unused[randomIndex];
 
         // Mark as used immediately upon picking
@@ -1678,7 +2037,89 @@
         return pickedId;
       }
 
+      function renderShufflingView(modeKey) {
+        const modeConf = MODES[modeKey];
+        cardContentEl.innerHTML = "";
+        cardContentEl.classList.remove("animate-pop", "animate-reveal");
+        void cardContentEl.offsetWidth;
+        cardContentEl.classList.add("animate-pop");
+
+        const view = document.createElement("div");
+        view.className = "shuffling-view";
+
+        const diceWrap = document.createElement("div");
+        diceWrap.className = "shuffling-dice-wrap";
+        const diceEl = document.createElement("div");
+        diceEl.className = "shuffling-dice";
+        diceEl.id = "shufflingDice";
+        diceEl.textContent = "🎲";
+        diceWrap.appendChild(diceEl);
+        view.appendChild(diceWrap);
+
+        const title = document.createElement("h3");
+        title.className = "shuffling-title";
+        title.id = "shufflingTitle";
+        title.textContent = `Đang chọn ngẫu nhiên ${modeConf.name}...`;
+        view.appendChild(title);
+
+        const sub = document.createElement("p");
+        sub.className = "shuffling-sub";
+        sub.id = "shufflingSub";
+        sub.textContent = "Mèo con đang lắc xúc xắc chọn điều bất ngờ 🐾";
+        view.appendChild(sub);
+
+        const loader = document.createElement("div");
+        loader.className = "shuffling-loader";
+        const bar = document.createElement("div");
+        bar.className = "shuffling-bar";
+        loader.appendChild(bar);
+        view.appendChild(loader);
+
+        cardContentEl.appendChild(view);
+      }
+
+      function triggerRandomShuffle(modeKey) {
+        isShuffling = true;
+        updateNextButton(true, "Đang quay ngẫu nhiên 🎲", "🎲");
+        renderShufflingView(modeKey);
+        playSound("shuffle");
+
+        const diceIcons = ["🎲", "🐾", "💗", "✨", "🎀", "💞", "🌸"];
+        const teases = [
+          `Đang chọn ngẫu nhiên ${MODES[modeKey].name}...`,
+          "Mèo con đang xáo thẻ định mệnh...",
+          "Một điều bất ngờ sắp xuất hiện cho hai bạn..."
+        ];
+
+        let tick = 0;
+        const intervalId = setInterval(function () {
+          tick++;
+          const diceEl = document.getElementById("shufflingDice");
+          const titleEl = document.getElementById("shufflingTitle");
+          if (diceEl) {
+            diceEl.textContent = diceIcons[tick % diceIcons.length];
+          }
+          if (titleEl && tick % 2 === 0) {
+            titleEl.textContent = teases[(tick / 2) % teases.length];
+          }
+        }, 90);
+
+        setTimeout(function () {
+          clearInterval(intervalId);
+          pickNextQuestion(modeKey, false);
+          isShuffling = false;
+          playSound("next");
+          renderGame();
+          triggerHeartBurst();
+
+          // Card pop-in reveal effect
+          cardContentEl.classList.remove("animate-pop");
+          cardContentEl.classList.add("animate-reveal");
+        }, 650);
+      }
+
       function selectMode(modeKey) {
+        if (isShuffling) return;
         if (!MODES[modeKey]) return;
 
         // If clicking currently active mode, do not change question
@@ -1689,13 +2130,16 @@
         playSound("click");
         gameState.currentMode = modeKey;
 
-        // If this mode has not picked any question yet, pick its first unused question
+        // If this mode has not picked any question yet, trigger random shuffle animation!
         if (gameState.currentQuestionId[modeKey] === null && !gameState.completedModes[modeKey]) {
-          pickNextQuestion(modeKey, false);
+          saveGameState();
+          renderModeTabs();
+          renderProgress();
+          triggerRandomShuffle(modeKey);
+        } else {
+          saveGameState();
+          renderGame();
         }
-
-        saveGameState();
-        renderGame();
       }
 
       /* ==========================================================================
@@ -1762,7 +2206,69 @@
         });
       }
 
+      function renderWelcomeView() {
+        cardContentEl.innerHTML = "";
+        cardContentEl.classList.remove("animate-pop", "animate-reveal");
+        void cardContentEl.offsetWidth;
+        cardContentEl.classList.add("animate-pop");
+
+        const view = document.createElement("div");
+        view.className = "welcome-view";
+
+        const badge = document.createElement("div");
+        badge.className = "welcome-badge";
+        badge.innerHTML = "<span>🐾</span> <span>Love Paws for Two</span>";
+        view.appendChild(badge);
+
+        const title = document.createElement("h2");
+        title.className = "welcome-title";
+        title.textContent = "Chọn Chế Độ Để Bắt Đầu 🐱✨";
+        view.appendChild(title);
+
+        const desc = document.createElement("p");
+        desc.className = "welcome-desc";
+        desc.textContent = "Chạm vào một trong ba chế độ bên dưới để mở ngẫu nhiên câu hỏi hoặc thử thách đầu tiên:";
+        view.appendChild(desc);
+
+        const optionsWrap = document.createElement("div");
+        optionsWrap.className = "welcome-options";
+
+        [
+          { mode: "TRUTH", icon: "💗", class: "opt-truth", title: "TRUTH 💗", desc: "20 câu hỏi thấu hiểu & sẻ chia chân thật" },
+          { mode: "DARE", icon: "🎀", class: "opt-dare", title: "DARE 🎀", desc: "20 thử thách ngọt ngào, lãng mạn gắn kết" },
+          { mode: "CHOOSE", icon: "💞", class: "opt-choose", title: "CHOOSE 💞", desc: "20 tình huống chọn 1 trong 2 đầy bất ngờ" }
+        ].forEach(function (opt) {
+          const cardBtn = document.createElement("button");
+          cardBtn.className = `welcome-opt-card ${opt.class}`;
+          cardBtn.type = "button";
+          cardBtn.innerHTML = `
+            <div class="opt-icon-wrap">${opt.icon}</div>
+            <div class="opt-info">
+              <div class="opt-title">${opt.title}</div>
+              <div class="opt-sub">${opt.desc}</div>
+            </div>
+            <span class="opt-arrow">➔</span>
+          `;
+          cardBtn.addEventListener("click", function () {
+            selectMode(opt.mode);
+          });
+          optionsWrap.appendChild(cardBtn);
+        });
+
+        view.appendChild(optionsWrap);
+        cardContentEl.appendChild(view);
+      }
+
       function renderQuestionCard() {
+        if (isShuffling) return;
+
+        // If no mode is selected yet, render the welcome card
+        if (!gameState.currentMode) {
+          renderWelcomeView();
+          updateNextButton(true, "🐾 Chạm vào chế độ để bắt đầu", "🐾");
+          return;
+        }
+
         const modeKey = gameState.currentMode;
         const modeConf = MODES[modeKey];
         const isCompleted = gameState.completedModes[modeKey];
@@ -1772,13 +2278,11 @@
         // Clear card container
         cardContentEl.innerHTML = "";
 
-        // Re-trigger soft pop-in animation
-        cardContentEl.classList.remove("animate-pop");
-        void cardContentEl.offsetWidth; // trigger reflow
-        cardContentEl.classList.add("animate-pop");
-
         // CASE 1: Mode is marked completed
         if (isCompleted) {
+          cardContentEl.classList.remove("animate-pop", "animate-reveal");
+          void cardContentEl.offsetWidth;
+          cardContentEl.classList.add("animate-pop");
           renderCompletionScreen(modeConf);
           updateNextButton(true, "Chế độ đã hoàn tất 🎉", "🏆");
           return;
@@ -1786,12 +2290,8 @@
 
         // CASE 2: No question loaded yet (safety fallback)
         if (!currentId) {
-          cardContentEl.innerHTML = `
-            <div class="card-body">
-              <p class="question-text">Nhấn nút bên dưới để bắt đầu nhận câu hỏi nhé! 🐱💗</p>
-            </div>
-          `;
-          updateNextButton(false, "Bắt đầu khám phá ✨", "✨");
+          renderWelcomeView();
+          updateNextButton(true, "🐾 Chạm vào chế độ để bắt đầu", "🐾");
           return;
         }
 
@@ -1991,6 +2491,13 @@
          7. NEXT QUESTION CLICK HANDLER
          ========================================================================== */
       nextQuestionBtn.addEventListener("click", function () {
+        if (isShuffling) return;
+
+        if (!gameState.currentMode) {
+          showToast("🐾 Hãy chọn một chế độ để bắt đầu nhé!");
+          return;
+        }
+
         const modeKey = gameState.currentMode;
         const remaining = getUnusedQuestionIds(modeKey);
 
@@ -2004,9 +2511,7 @@
           return;
         }
 
-        pickNextQuestion(modeKey, true);
-        renderGame();
-        triggerHeartBurst();
+        triggerRandomShuffle(modeKey);
       });
 
       /* ==========================================================================
@@ -2203,12 +2708,12 @@
         const savedState = loadGameState();
         if (savedState) {
           gameState = savedState;
-          if (gameState.currentQuestionId[gameState.currentMode] === null && !gameState.completedModes[gameState.currentMode]) {
+          if (gameState.currentMode && gameState.currentQuestionId[gameState.currentMode] === null && !gameState.completedModes[gameState.currentMode]) {
             pickNextQuestion(gameState.currentMode, false);
           }
         } else {
-          // New session: pick first TRUTH question
-          pickNextQuestion("TRUTH", false);
+          // When opening app: do NOT open truth first, keep all closed!
+          gameState = createDefaultState();
         }
 
         saveGameState();
