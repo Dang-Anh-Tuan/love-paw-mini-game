@@ -1,0 +1,2229 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+  <meta name="theme-color" content="#FFD6E7">
+  <meta name="description" content="Love Paws — Game Truth or Dare lãng mạn, ngọt ngào dành cho các cặp đôi.">
+  <title>Love Paws — Truth, Dare & Choose 💗🐱</title>
+
+  <style>
+    /* ==========================================================================
+       1. CSS VARIABLES & THEME SETUP
+       ========================================================================== */
+    :root {
+      --color-pink-pastel: #FFD6E7;
+      --color-pink-soft: #FFF0F5;
+      --color-pink-deep: #FF6B9A;
+      --color-pink-glow: rgba(255, 107, 154, 0.35);
+      --color-cherry: #E84A72;
+      --color-cherry-dark: #C63559;
+      --color-cream: #FFF8F3;
+      --color-lavender: #DCD6FF;
+      --color-lavender-light: #F4F1FF;
+      --color-text-main: #493746;
+      --color-text-muted: #7E6B7B;
+      --color-card-bg: rgba(255, 255, 255, 0.94);
+      --color-card-border: rgba(255, 182, 206, 0.45);
+
+      --radius-sm: 10px;
+      --radius-md: 18px;
+      --radius-lg: 26px;
+      --radius-full: 9999px;
+
+      --shadow-sm: 0 4px 12px rgba(255, 107, 154, 0.12);
+      --shadow-card: 0 16px 36px -6px rgba(232, 74, 114, 0.16), 0 4px 12px rgba(73, 55, 70, 0.04);
+      --shadow-button: 0 8px 20px -4px rgba(255, 107, 154, 0.42);
+      --shadow-active: 0 4px 10px rgba(232, 74, 114, 0.3);
+
+      --transition-smooth: all 0.28s cubic-bezier(0.34, 1.56, 0.64, 1);
+      --transition-soft: all 0.2s ease;
+    }
+
+    /* ==========================================================================
+       2. RESET & BASE STYLES
+       ========================================================================== */
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    html {
+      font-size: 16px;
+      scroll-behavior: smooth;
+    }
+
+    body {
+      min-height: 100vh;
+      min-height: 100dvh;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji";
+      background: linear-gradient(135deg, #FFF8F3 0%, #FFD6E7 42%, #FFF0F5 72%, #DCD6FF 100%);
+      background-attachment: fixed;
+      color: var(--color-text-main);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      overflow-x: hidden;
+      position: relative;
+      line-height: 1.5;
+    }
+
+    /* Accessibility focus ring */
+    :focus-visible {
+      outline: 3px solid var(--color-pink-deep);
+      outline-offset: 3px;
+    }
+
+    button {
+      font-family: inherit;
+      cursor: pointer;
+      border: none;
+      background: none;
+      user-select: none;
+    }
+
+    /* ==========================================================================
+       3. BACKGROUND FLOATING PARTICLES
+       ========================================================================== */
+    .bg-particles {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      pointer-events: none;
+      z-index: 0;
+      overflow: hidden;
+    }
+
+    .heart-particle {
+      position: absolute;
+      bottom: -40px;
+      color: rgba(255, 107, 154, 0.25);
+      font-size: 1.2rem;
+      animation: floatUpward 14s linear infinite;
+    }
+
+    @keyframes floatUpward {
+      0% {
+        transform: translateY(0) rotate(0deg) scale(0.8);
+        opacity: 0;
+      }
+      10% {
+        opacity: 0.7;
+      }
+      90% {
+        opacity: 0.5;
+      }
+      100% {
+        transform: translateY(-115vh) rotate(360deg) scale(1.1);
+        opacity: 0;
+      }
+    }
+
+    /* ==========================================================================
+       4. LAYOUT & APP CONTAINER
+       ========================================================================== */
+    .app-container {
+      position: relative;
+      z-index: 1;
+      width: 100%;
+      max-width: 500px;
+      padding: 16px 16px 36px;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+      min-height: 100dvh;
+      margin: 0 auto;
+    }
+
+    /* ==========================================================================
+       5. HEADER & MASCOT
+       ========================================================================== */
+    .header {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      margin-bottom: 14px;
+      position: relative;
+    }
+
+    .header-top-bar {
+      width: 100%;
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      margin-bottom: 4px;
+    }
+
+    .sound-toggle-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(255, 255, 255, 0.85);
+      border: 1px solid var(--color-card-border);
+      padding: 6px 12px;
+      border-radius: var(--radius-full);
+      font-size: 0.85rem;
+      color: var(--color-text-main);
+      box-shadow: var(--shadow-sm);
+      transition: var(--transition-soft);
+    }
+
+    .sound-toggle-btn:hover {
+      background: #FFFFFF;
+      transform: translateY(-1px);
+    }
+
+    /* Inline SVG Cute Cat Mascot */
+    .mascot-wrap {
+      width: 100px;
+      height: 78px;
+      margin-bottom: 4px;
+      animation: catNudge 3.5s ease-in-out infinite;
+      filter: drop-shadow(0 6px 10px rgba(232, 74, 114, 0.15));
+    }
+
+    @keyframes catNudge {
+      0%, 100% {
+        transform: translateY(0) scale(1);
+      }
+      50% {
+        transform: translateY(-5px) scale(1.02);
+      }
+    }
+
+    .app-title {
+      font-size: 1.55rem;
+      font-weight: 800;
+      color: var(--color-cherry);
+      letter-spacing: -0.02em;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      justify-content: center;
+      text-shadow: 0 1px 2px rgba(255, 255, 255, 0.8);
+    }
+
+    .app-subtitle {
+      font-size: 0.88rem;
+      color: var(--color-text-muted);
+      margin-top: 2px;
+      font-weight: 500;
+    }
+
+    /* Consent & Safety reminder badge */
+    .reminder-banner {
+      background: rgba(255, 255, 255, 0.8);
+      border: 1px solid rgba(255, 182, 206, 0.6);
+      border-radius: var(--radius-full);
+      padding: 6px 14px;
+      font-size: 0.8rem;
+      color: #9C4D6F;
+      margin: 6px auto 14px;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      box-shadow: 0 2px 8px rgba(255, 107, 154, 0.08);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      text-align: center;
+    }
+
+    /* ==========================================================================
+       6. MODE SELECTOR TABS
+       ========================================================================== */
+    .mode-tabs {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+      margin-bottom: 16px;
+      role: tablist;
+    }
+
+    .tab-btn {
+      background: rgba(255, 255, 255, 0.8);
+      border: 2px solid transparent;
+      border-radius: var(--radius-md);
+      padding: 10px 4px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 3px;
+      box-shadow: var(--shadow-sm);
+      transition: var(--transition-smooth);
+      position: relative;
+      cursor: pointer;
+      backdrop-filter: blur(6px);
+      -webkit-backdrop-filter: blur(6px);
+    }
+
+    .tab-btn:hover {
+      background: #FFFFFF;
+      transform: translateY(-2px);
+      box-shadow: 0 8px 18px rgba(255, 107, 154, 0.22);
+    }
+
+    .tab-btn:active {
+      transform: translateY(1px);
+    }
+
+    .tab-btn.active {
+      background: #FFFFFF;
+      border-color: var(--color-pink-deep);
+      box-shadow: 0 8px 22px rgba(255, 107, 154, 0.32);
+      transform: translateY(-2px);
+    }
+
+    .tab-icon {
+      font-size: 1.35rem;
+      line-height: 1;
+    }
+
+    .tab-name {
+      font-weight: 800;
+      font-size: 0.88rem;
+      letter-spacing: 0.03em;
+    }
+
+    .tab-btn[data-mode="TRUTH"] .tab-name {
+      color: #E84A72;
+    }
+    .tab-btn[data-mode="DARE"] .tab-name {
+      color: #D63384;
+    }
+    .tab-btn[data-mode="CHOOSE"] .tab-name {
+      color: #7B42BC;
+    }
+
+    .tab-tag {
+      font-size: 0.68rem;
+      font-weight: 600;
+      color: var(--color-text-muted);
+      background: rgba(255, 214, 231, 0.4);
+      padding: 2px 7px;
+      border-radius: var(--radius-full);
+    }
+
+    .tab-btn.active .tab-tag {
+      background: var(--color-pink-pastel);
+      color: var(--color-cherry);
+      font-weight: 700;
+    }
+
+    /* ==========================================================================
+       7. MAIN CARD AREA (QUESTION / COMPLETION)
+       ========================================================================== */
+    .card-wrapper {
+      position: relative;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      margin-bottom: 18px;
+    }
+
+    .game-card {
+      background: var(--color-card-bg);
+      border: 1.5px solid var(--color-card-border);
+      border-radius: var(--radius-lg);
+      padding: 22px 20px 20px;
+      box-shadow: var(--shadow-card);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      transition: var(--transition-smooth);
+      min-height: 250px;
+    }
+
+    .game-card.animate-pop {
+      animation: cardPopIn 0.36s cubic-bezier(0.2, 0.8, 0.3, 1.2);
+    }
+
+    @keyframes cardPopIn {
+      0% {
+        opacity: 0.3;
+        transform: scale(0.95) translateY(8px);
+      }
+      100% {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+      }
+    }
+
+    /* Card header info */
+    .card-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 14px;
+      padding-bottom: 10px;
+      border-bottom: 1px dashed rgba(255, 182, 206, 0.5);
+    }
+
+    .card-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.78rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      padding: 4px 10px;
+      border-radius: var(--radius-full);
+    }
+
+    .badge-truth {
+      background: rgba(255, 214, 231, 0.6);
+      color: #D63384;
+    }
+    .badge-dare {
+      background: rgba(255, 182, 217, 0.6);
+      color: #C2185B;
+    }
+    .badge-choose {
+      background: rgba(220, 214, 255, 0.6);
+      color: #6A1B9A;
+    }
+
+    .card-counter {
+      font-size: 0.82rem;
+      font-weight: 700;
+      color: var(--color-text-muted);
+      background: rgba(0, 0, 0, 0.03);
+      padding: 3px 10px;
+      border-radius: var(--radius-full);
+    }
+
+    /* Question text container */
+    .card-body {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      padding: 8px 4px;
+      min-height: 120px;
+    }
+
+    .question-quote-icon {
+      font-size: 1.5rem;
+      color: var(--color-pink-deep);
+      opacity: 0.5;
+      margin-bottom: 4px;
+      user-select: none;
+    }
+
+    .question-text {
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: var(--color-text-main);
+      line-height: 1.55;
+      word-break: break-word;
+      margin: 4px 0 12px;
+    }
+
+    /* Small copy button */
+    .copy-btn {
+      align-self: center;
+      font-size: 0.75rem;
+      color: var(--color-text-muted);
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 4px 10px;
+      border-radius: var(--radius-full);
+      background: rgba(255, 255, 255, 0.7);
+      border: 1px solid rgba(255, 182, 206, 0.5);
+      transition: var(--transition-soft);
+      margin-top: 6px;
+    }
+
+    .copy-btn:hover {
+      color: var(--color-cherry);
+      border-color: var(--color-pink-deep);
+      background: #FFFFFF;
+    }
+
+    /* ==========================================================================
+       8. CHOOSE MODE OPTIONS A / B
+       ========================================================================== */
+    .choose-container {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-top: 14px;
+    }
+
+    .choose-option-btn {
+      width: 100%;
+      text-align: left;
+      background: #FFFFFF;
+      border: 2px solid rgba(255, 214, 231, 0.8);
+      border-radius: var(--radius-md);
+      padding: 12px 14px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      cursor: pointer;
+      transition: var(--transition-smooth);
+      position: relative;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
+    }
+
+    .choose-option-btn:hover {
+      border-color: var(--color-pink-deep);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 14px rgba(255, 107, 154, 0.18);
+    }
+
+    .choose-option-btn:active {
+      transform: translateY(1px);
+    }
+
+    .choose-letter {
+      width: 32px;
+      height: 32px;
+      min-width: 32px;
+      border-radius: 50%;
+      background: var(--color-pink-pastel);
+      color: var(--color-cherry);
+      font-weight: 800;
+      font-size: 0.95rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: var(--transition-smooth);
+    }
+
+    .choose-text {
+      flex: 1;
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: var(--color-text-main);
+      line-height: 1.4;
+      text-align: left;
+    }
+
+    .choose-check {
+      font-size: 1.1rem;
+      opacity: 0;
+      transform: scale(0.6);
+      transition: var(--transition-smooth);
+    }
+
+    /* Selected state for CHOOSE */
+    .choose-option-btn.selected {
+      background: linear-gradient(135deg, #FFF5F8 0%, #FFFFFF 100%);
+      border-color: var(--color-pink-deep);
+      box-shadow: 0 6px 16px rgba(255, 107, 154, 0.28);
+    }
+
+    .choose-option-btn.selected .choose-letter {
+      background: var(--color-pink-deep);
+      color: #FFFFFF;
+      transform: scale(1.08);
+    }
+
+    .choose-option-btn.selected .choose-check {
+      opacity: 1;
+      transform: scale(1);
+    }
+
+    /* Feedback bubble when option is clicked */
+    .choose-feedback {
+      background: rgba(255, 238, 244, 0.9);
+      border: 1px dashed var(--color-pink-deep);
+      border-radius: var(--radius-sm);
+      padding: 9px 12px;
+      font-size: 0.85rem;
+      color: #9C3861;
+      margin-top: 10px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      text-align: left;
+      animation: feedbackFade 0.3s ease-out;
+    }
+
+    @keyframes feedbackFade {
+      0% { opacity: 0; transform: translateY(4px); }
+      100% { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ==========================================================================
+       9. COMPLETION CARD VIEW
+       ========================================================================== */
+    .completion-view {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      padding: 18px 8px;
+      animation: cardPopIn 0.4s ease;
+    }
+
+    .completion-icon {
+      font-size: 3.2rem;
+      margin-bottom: 8px;
+      animation: trophyBounce 2s ease infinite;
+    }
+
+    @keyframes trophyBounce {
+      0%, 100% { transform: translateY(0) scale(1); }
+      50% { transform: translateY(-8px) scale(1.06); }
+    }
+
+    .completion-title {
+      font-size: 1.35rem;
+      font-weight: 800;
+      color: var(--color-cherry);
+      margin-bottom: 8px;
+    }
+
+    .completion-desc {
+      font-size: 0.92rem;
+      color: var(--color-text-main);
+      line-height: 1.5;
+      margin-bottom: 18px;
+      max-width: 360px;
+    }
+
+    .completion-switch-btns {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      justify-content: center;
+      margin-bottom: 12px;
+      width: 100%;
+    }
+
+    .completion-switch-btn {
+      background: rgba(255, 255, 255, 0.9);
+      border: 1.5px solid var(--color-pink-deep);
+      color: var(--color-cherry);
+      font-weight: 700;
+      font-size: 0.85rem;
+      padding: 8px 14px;
+      border-radius: var(--radius-full);
+      transition: var(--transition-soft);
+    }
+
+    .completion-switch-btn:hover {
+      background: var(--color-pink-deep);
+      color: #FFFFFF;
+      transform: translateY(-2px);
+    }
+
+    /* ==========================================================================
+       10. ACTION BUTTONS (NEXT QUESTION & RESET)
+       ========================================================================== */
+    .primary-action-wrap {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+
+    .btn-next {
+      width: 100%;
+      background: linear-gradient(135deg, var(--color-pink-deep) 0%, var(--color-cherry) 100%);
+      color: #FFFFFF;
+      font-weight: 800;
+      font-size: 1.05rem;
+      letter-spacing: 0.02em;
+      padding: 15px 24px;
+      border-radius: var(--radius-full);
+      box-shadow: var(--shadow-button);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      transition: var(--transition-smooth);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .btn-next:hover:not(:disabled) {
+      transform: translateY(-3px) scale(1.01);
+      box-shadow: 0 12px 26px -2px rgba(232, 74, 114, 0.5);
+    }
+
+    .btn-next:active:not(:disabled) {
+      transform: translateY(1px) scale(0.99);
+      box-shadow: var(--shadow-active);
+    }
+
+    .btn-next:disabled {
+      background: #D5CBD3;
+      color: #8C7C88;
+      box-shadow: none;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .btn-next::after {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 60%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+      transform: skewX(-20deg);
+      animation: shineLight 4s infinite;
+    }
+
+    @keyframes shineLight {
+      0% { left: -100%; }
+      20% { left: 160%; }
+      100% { left: 160%; }
+    }
+
+    /* ==========================================================================
+       11. PROGRESS INDICATORS FOR 3 MODES
+       ========================================================================== */
+    .progress-section {
+      background: rgba(255, 255, 255, 0.7);
+      border: 1px solid rgba(255, 214, 231, 0.7);
+      border-radius: var(--radius-md);
+      padding: 12px 14px;
+      margin-bottom: 16px;
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.02);
+    }
+
+    .progress-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+    }
+
+    .progress-title {
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: var(--color-text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .progress-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+    }
+
+    .progress-item {
+      background: rgba(255, 255, 255, 0.85);
+      border-radius: var(--radius-sm);
+      padding: 6px 8px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      border: 1px solid rgba(255, 214, 231, 0.5);
+    }
+
+    .progress-item.active {
+      border-color: var(--color-pink-deep);
+      background: #FFFFFF;
+    }
+
+    .progress-info {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.72rem;
+      font-weight: 700;
+    }
+
+    .progress-label {
+      color: var(--color-text-main);
+    }
+
+    .progress-count {
+      color: var(--color-cherry);
+    }
+
+    .progress-bar-bg {
+      width: 100%;
+      height: 6px;
+      background: rgba(255, 214, 231, 0.5);
+      border-radius: var(--radius-full);
+      overflow: hidden;
+    }
+
+    .progress-bar-fill {
+      height: 100%;
+      border-radius: var(--radius-full);
+      transition: width 0.35s ease;
+    }
+
+    .fill-truth {
+      background: linear-gradient(90deg, #FF9EAA, #E84A72);
+    }
+    .fill-dare {
+      background: linear-gradient(90deg, #FF8DA1, #D63384);
+    }
+    .fill-choose {
+      background: linear-gradient(90deg, #B5A0FF, #7B42BC);
+    }
+
+    /* ==========================================================================
+       12. SECONDARY CONTROLS & FOOTER
+       ========================================================================== */
+    .secondary-controls {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 14px;
+    }
+
+    .btn-reset {
+      font-size: 0.82rem;
+      font-weight: 600;
+      color: var(--color-text-muted);
+      background: rgba(255, 255, 255, 0.6);
+      border: 1px dashed rgba(185, 160, 180, 0.5);
+      border-radius: var(--radius-full);
+      padding: 6px 16px;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: var(--transition-soft);
+    }
+
+    .btn-reset:hover {
+      color: var(--color-cherry);
+      border-color: var(--color-cherry);
+      background: #FFFFFF;
+      transform: translateY(-1px);
+    }
+
+    .footer {
+      text-align: center;
+      font-size: 0.76rem;
+      color: var(--color-text-muted);
+      margin-top: auto;
+      padding-top: 10px;
+    }
+
+    /* ==========================================================================
+       13. MODAL CONFIRMATION DIALOG
+       ========================================================================== */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(40, 20, 35, 0.45);
+      backdrop-filter: blur(4px);
+      -webkit-backdrop-filter: blur(4px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      z-index: 999;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.22s ease;
+    }
+
+    .modal-overlay.open {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .modal-card {
+      background: #FFFFFF;
+      border-radius: var(--radius-lg);
+      padding: 26px 22px;
+      width: 100%;
+      max-width: 380px;
+      text-align: center;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+      transform: scale(0.92) translateY(12px);
+      transition: var(--transition-smooth);
+    }
+
+    .modal-overlay.open .modal-card {
+      transform: scale(1) translateY(0);
+    }
+
+    .modal-mascot {
+      font-size: 2.6rem;
+      margin-bottom: 6px;
+    }
+
+    .modal-title {
+      font-size: 1.25rem;
+      font-weight: 800;
+      color: var(--color-cherry);
+      margin-bottom: 8px;
+    }
+
+    .modal-desc {
+      font-size: 0.9rem;
+      color: var(--color-text-main);
+      line-height: 1.5;
+      margin-bottom: 22px;
+    }
+
+    .modal-actions {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    .btn-modal-cancel {
+      background: #F1ECEF;
+      color: var(--color-text-main);
+      font-weight: 700;
+      font-size: 0.92rem;
+      padding: 11px 16px;
+      border-radius: var(--radius-full);
+      transition: var(--transition-soft);
+    }
+
+    .btn-modal-cancel:hover {
+      background: #E5DFE3;
+    }
+
+    .btn-modal-confirm {
+      background: linear-gradient(135deg, var(--color-pink-deep) 0%, var(--color-cherry) 100%);
+      color: #FFFFFF;
+      font-weight: 700;
+      font-size: 0.92rem;
+      padding: 11px 16px;
+      border-radius: var(--radius-full);
+      box-shadow: 0 4px 12px rgba(232, 74, 114, 0.3);
+      transition: var(--transition-soft);
+    }
+
+    .btn-modal-confirm:hover {
+      box-shadow: 0 6px 16px rgba(232, 74, 114, 0.45);
+      transform: translateY(-1px);
+    }
+
+    /* ==========================================================================
+       14. TOAST NOTIFICATION
+       ========================================================================== */
+    .toast-container {
+      position: fixed;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 1000;
+      pointer-events: none;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      align-items: center;
+      width: 90%;
+      max-width: 360px;
+    }
+
+    .toast {
+      background: rgba(45, 30, 42, 0.92);
+      color: #FFFFFF;
+      font-size: 0.86rem;
+      font-weight: 600;
+      padding: 9px 18px;
+      border-radius: var(--radius-full);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.18);
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      animation: toastIn 0.3s cubic-bezier(0.18, 0.89, 0.32, 1.28) forwards;
+      backdrop-filter: blur(6px);
+      -webkit-backdrop-filter: blur(6px);
+    }
+
+    @keyframes toastIn {
+      0% { opacity: 0; transform: translateY(16px) scale(0.9); }
+      100% { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    .toast.hide {
+      animation: toastOut 0.25s ease-in forwards;
+    }
+
+    @keyframes toastOut {
+      0% { opacity: 1; transform: translateY(0) scale(1); }
+      100% { opacity: 0; transform: translateY(-8px) scale(0.9); }
+    }
+
+    /* Dynamic heart bursts */
+    .burst-heart {
+      position: fixed;
+      pointer-events: none;
+      z-index: 9999;
+      font-size: 1.4rem;
+      animation: heartBurst 0.9s cubic-bezier(0.2, 0.8, 0.4, 1) forwards;
+    }
+
+    @keyframes heartBurst {
+      0% {
+        opacity: 1;
+        transform: translate(0, 0) scale(0.6) rotate(0deg);
+      }
+      100% {
+        opacity: 0;
+        transform: translate(var(--tx, 0px), var(--ty, -80px)) scale(1.3) rotate(var(--tr, 20deg));
+      }
+    }
+
+    /* ==========================================================================
+       15. RESPONSIVE & PREFERS-REDUCED-MOTION
+       ========================================================================== */
+    @media (max-width: 360px) {
+      .app-title {
+        font-size: 1.35rem;
+      }
+      .tab-name {
+        font-size: 0.78rem;
+      }
+      .question-text {
+        font-size: 1.05rem;
+      }
+      .btn-next {
+        font-size: 0.98rem;
+        padding: 13px 18px;
+      }
+      .choose-text {
+        font-size: 0.88rem;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+      }
+      .heart-particle {
+        display: none;
+      }
+      .btn-next::after {
+        display: none;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Floating Background Hearts -->
+  <div class="bg-particles" aria-hidden="true" id="bgParticles"></div>
+
+  <!-- Main Container -->
+  <main class="app-container">
+
+    <!-- Header Section -->
+    <header class="header">
+      <div class="header-top-bar">
+        <button class="sound-toggle-btn" id="soundToggleBtn" type="button" aria-label="Bật hoặc tắt âm thanh">
+          <span id="soundIcon">🔇</span>
+          <span id="soundText">Âm thanh: Tắt</span>
+        </button>
+      </div>
+
+      <!-- Mascot Inline SVG (Adorable kitten couple) -->
+      <div class="mascot-wrap" aria-hidden="true">
+        <svg viewBox="0 0 160 120" fill="none" xmlns="http://www.w3.org/2000/svg" style="width:100%; height:100%;">
+          <!-- Floating Heart above cats -->
+          <path d="M80 18 C75 9, 62 10, 62 21 C62 31, 80 43, 80 43 C80 43, 98 31, 98 21 C98 10, 85 9, 80 18 Z" fill="#FF6B9A">
+            <animate attributeName="transform" type="translate" values="0,0; 0,-4; 0,0" dur="2s" repeatCount="indefinite" />
+          </path>
+          
+          <!-- Cat 1 (White Kitten, Left) -->
+          <g transform="translate(18, 30)">
+            <!-- Left ear -->
+            <polygon points="12,32 4,6 30,22" fill="#FFFFFF" stroke="#FFD6E7" stroke-width="2" />
+            <polygon points="13,29 8,11 26,22" fill="#FFB7D2" />
+            <!-- Right ear -->
+            <polygon points="46,22 72,6 64,32" fill="#FFFFFF" stroke="#FFD6E7" stroke-width="2" />
+            <polygon points="50,22 68,11 63,29" fill="#FFB7D2" />
+            <!-- Head & Body -->
+            <ellipse cx="38" cy="46" rx="32" ry="26" fill="#FFFFFF" />
+            <ellipse cx="38" cy="74" rx="26" ry="18" fill="#FFFFFF" />
+            <!-- Eyes (closed happy ^ ^) -->
+            <path d="M25 46 Q31 40 37 46" stroke="#493746" stroke-width="2.5" stroke-linecap="round" fill="none" />
+            <path d="M43 46 Q49 40 55 46" stroke="#493746" stroke-width="2.5" stroke-linecap="round" fill="none" />
+            <!-- Nose & Mouth -->
+            <ellipse cx="40" cy="51" rx="2.5" ry="2" fill="#FF6B9A" />
+            <path d="M37 53 Q40 56 43 53" stroke="#493746" stroke-width="1.8" stroke-linecap="round" fill="none" />
+            <!-- Cheeks blushing -->
+            <circle cx="21" cy="52" r="5" fill="#FFAEC9" opacity="0.6" />
+            <circle cx="58" cy="52" r="5" fill="#FFAEC9" opacity="0.6" />
+          </g>
+
+          <!-- Cat 2 (Peach/Orange Kitten, Right, snuggling) -->
+          <g transform="translate(68, 32)">
+            <!-- Left ear -->
+            <polygon points="14,30 8,8 30,22" fill="#FFE2D1" stroke="#FFC5A8" stroke-width="2" />
+            <polygon points="14,27 10,13 26,22" fill="#FF9EAA" />
+            <!-- Right ear -->
+            <polygon points="46,22 68,8 62,30" fill="#FFE2D1" stroke="#FFC5A8" stroke-width="2" />
+            <polygon points="50,22 66,13 62,27" fill="#FF9EAA" />
+            <!-- Head & Body -->
+            <ellipse cx="38" cy="45" rx="30" ry="25" fill="#FFE2D1" />
+            <ellipse cx="38" cy="72" rx="26" ry="17" fill="#FFE2D1" />
+            <!-- Forehead stripes -->
+            <path d="M38 24 L38 30 M31 26 L33 31 M45 26 L43 31" stroke="#E59871" stroke-width="2" stroke-linecap="round" />
+            <!-- Eyes (sleeping sweet) -->
+            <path d="M26 44 Q32 39 38 44" stroke="#493746" stroke-width="2.5" stroke-linecap="round" fill="none" />
+            <path d="M44 44 Q50 39 56 44" stroke="#493746" stroke-width="2.5" stroke-linecap="round" fill="none" />
+            <!-- Nose & Mouth -->
+            <ellipse cx="41" cy="49" rx="2.5" ry="2" fill="#E84A72" />
+            <path d="M38 51 Q41 54 44 51" stroke="#493746" stroke-width="1.8" stroke-linecap="round" fill="none" />
+            <!-- Cheeks blushing -->
+            <circle cx="22" cy="50" r="5" fill="#FF8DA1" opacity="0.6" />
+            <circle cx="59" cy="50" r="5" fill="#FF8DA1" opacity="0.6" />
+          </g>
+
+          <!-- Little paws holding hands in the center -->
+          <circle cx="78" cy="98" r="6" fill="#FFFFFF" stroke="#FFD6E7" stroke-width="1.5" />
+          <circle cx="86" cy="98" r="6" fill="#FFE2D1" stroke="#FFC5A8" stroke-width="1.5" />
+        </svg>
+      </div>
+
+      <h1 class="app-title">Love Paws 💗🐱</h1>
+      <p class="app-subtitle">Một chút ngại ngùng, thật nhiều yêu thương</p>
+      
+      <div class="reminder-banner" role="note">
+        <span>🐾</span>
+        <span>Mọi thử thách đều cần cả hai thoải mái và đồng ý 💗</span>
+      </div>
+    </header>
+
+    <!-- 3 Mode Selection Tabs -->
+    <nav class="mode-tabs" aria-label="Chọn chế độ chơi">
+      <button class="tab-btn active" data-mode="TRUTH" id="tabTruth" type="button" role="tab" aria-selected="true" aria-controls="cardContent">
+        <span class="tab-icon">💗</span>
+        <span class="tab-name">TRUTH</span>
+        <span class="tab-tag" id="tabCountTruth">0/20</span>
+      </button>
+      <button class="tab-btn" data-mode="DARE" id="tabDare" type="button" role="tab" aria-selected="false" aria-controls="cardContent">
+        <span class="tab-icon">🎀</span>
+        <span class="tab-name">DARE</span>
+        <span class="tab-tag" id="tabCountDare">0/20</span>
+      </button>
+      <button class="tab-btn" data-mode="CHOOSE" id="tabChoose" type="button" role="tab" aria-selected="false" aria-controls="cardContent">
+        <span class="tab-icon">💞</span>
+        <span class="tab-name">CHOOSE</span>
+        <span class="tab-tag" id="tabCountChoose">0/20</span>
+      </button>
+    </nav>
+
+    <!-- Question Card Container -->
+    <div class="card-wrapper">
+      <section class="game-card animate-pop" id="cardContent" aria-live="polite">
+        <!-- Dynamic content rendered by JavaScript -->
+      </section>
+    </div>
+
+    <!-- Primary Action Button -->
+    <div class="primary-action-wrap">
+      <button class="btn-next" id="nextQuestionBtn" type="button">
+        <span id="nextBtnIcon">✨</span>
+        <span id="nextBtnText">Câu tiếp theo</span>
+      </button>
+    </div>
+
+    <!-- Mini Progress Bars for 3 Modes -->
+    <section class="progress-section" aria-label="Tiến trình phiên chơi">
+      <div class="progress-header">
+        <span class="progress-title">Tiến trình phiên chơi</span>
+        <span style="font-size:0.75rem; color:var(--color-text-muted);">Không lặp lại câu</span>
+      </div>
+      <div class="progress-grid">
+        <div class="progress-item" id="progItemTruth">
+          <div class="progress-info">
+            <span class="progress-label">💗 Truth</span>
+            <span class="progress-count" id="progTextTruth">0/20</span>
+          </div>
+          <div class="progress-bar-bg">
+            <div class="progress-bar-fill fill-truth" id="progBarTruth" style="width: 0%;"></div>
+          </div>
+        </div>
+
+        <div class="progress-item" id="progItemDare">
+          <div class="progress-info">
+            <span class="progress-label">🎀 Dare</span>
+            <span class="progress-count" id="progTextDare">0/20</span>
+          </div>
+          <div class="progress-bar-bg">
+            <div class="progress-bar-fill fill-dare" id="progBarDare" style="width: 0%;"></div>
+          </div>
+        </div>
+
+        <div class="progress-item" id="progItemChoose">
+          <div class="progress-info">
+            <span class="progress-label">💞 Choose</span>
+            <span class="progress-count" id="progTextChoose">0/20</span>
+          </div>
+          <div class="progress-bar-bg">
+            <div class="progress-bar-fill fill-choose" id="progBarChoose" style="width: 0%;"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Secondary Action: Reset Game -->
+    <div class="secondary-controls">
+      <button class="btn-reset" id="resetGameBtn" type="button">
+        <span>🔄</span>
+        <span>Chơi lại từ đầu</span>
+      </button>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+      <p>Made with 💗 for two • Chúc hai bạn có những phút giây thật hạnh phúc! 🐾</p>
+    </footer>
+
+  </main>
+
+  <!-- Modal Confirmation for Reset -->
+  <div class="modal-overlay" id="resetModal" role="dialog" aria-modal="true" aria-labelledby="modalTitle" aria-describedby="modalDesc">
+    <div class="modal-card">
+      <div class="modal-mascot">🐱💭</div>
+      <h2 class="modal-title" id="modalTitle">Làm mới lượt chơi?</h2>
+      <p class="modal-desc" id="modalDesc">
+        Bạn có chắc muốn chơi lại từ đầu không? Toàn bộ tiến trình của cả 3 chế độ sẽ được làm mới.
+      </p>
+      <div class="modal-actions">
+        <button class="btn-modal-cancel" id="cancelResetBtn" type="button">Hủy bỏ</button>
+        <button class="btn-modal-confirm" id="confirmResetBtn" type="button">Chơi lại 💗</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notification Container -->
+  <div class="toast-container" id="toastContainer" aria-live="assertive"></div>
+
+  <!-- ==========================================================================
+       JAVASCRIPT APPLICATION LOGIC
+       ========================================================================== -->
+  <script>
+    (function () {
+      "use strict";
+
+      /* ==========================================================================
+         1. STATIC DATA ARRAYS (EXACTLY 20 PER MODE)
+         ========================================================================== */
+      const TRUTH_QUESTIONS = [
+        { id: 1, text: "Ấn tượng đầu tiên của em về anh là gì?" },
+        { id: 2, text: "Em thấy anh có tính cách nào buồn cười nhất?" },
+        { id: 3, text: "Nếu được đặt cho anh một biệt danh, em sẽ đặt là gì?" },
+        { id: 4, text: "Có thói quen kỳ lạ nào của em mà ít người biết không?" },
+        { id: 5, text: "Nếu được nghỉ nguyên một ngày không phải lo gì cả, em muốn làm gì nhất?" },
+        { id: 6, text: "Có món ăn nào em thích đến mức có thể ăn liên tục cả tuần không?" },
+        { id: 7, text: "Em nghĩ mình giống trẻ con nhất ở điểm nào?" },
+        { id: 8, text: "Nếu được chọn một siêu năng lực, em sẽ chọn gì và dùng nó để làm gì?" },
+        { id: 9, text: "Trong buổi hẹn hôm nay, điều gì khiến em mong chờ nhất?" },
+        { id: 10, text: "Em thích được người khác quan tâm bằng lời nói hay hành động hơn?" },
+        { id: 11, text: "Em thích người yêu chủ động lên kế hoạch hay cùng nhau bàn bạc?" },
+        { id: 12, text: "Có hành động nhỏ nào khiến em cảm thấy người khác rất tinh tế không?" },
+        { id: 13, text: "Theo em, điểm nào ở anh dễ khiến người khác có thiện cảm nhất?" },
+        { id: 14, text: "Có khoảnh khắc nào gần đây khiến em bật cười khi nhớ lại không?" },
+        { id: 15, text: "Nếu chọn một bài hát để miêu tả anh, em sẽ chọn bài nào?" },
+        { id: 16, text: "Nếu hai đứa có thể đi chơi bất cứ đâu vào ngày mai, em muốn đi đâu?" },
+        { id: 17, text: "Có điều gì em muốn thử cùng anh nhưng chưa có dịp không?" },
+        { id: 18, text: "Khi đi chơi cùng một người, điều gì khiến em cảm thấy thoải mái nhất?" },
+        { id: 19, text: "Nếu được tua lại một khoảnh khắc trong những lần hai đứa đi chơi, em muốn tua lại khoảnh khắc nào?" },
+        { id: 20, text: "Nếu phải nói một điều em thấy đáng yêu ở anh mà chưa từng nói ra, em sẽ nói gì?" }
+      ];
+
+      const DARE_CHALLENGES = [
+        { id: 1, text: "Ôm đối phương trong 10 giây." },
+        { id: 2, text: "Hôn đối phương." },
+        { id: 3, text: "Nhìn vào mắt nhau trong 15 giây, ai cười trước thì thua sẽ phải thực hiện 1 yêu cầu của người còn lại." },
+        { id: 4, text: "Nắm tay nhau trong 1 phút." },
+        { id: 5, text: "Để đối phương tựa đầu vào vai mình nghe hết một bài hát." },
+        { id: 6, text: "Sử dụng biện pháp nói quá để mô tả tốt về đối phương." },
+        { id: 7, text: "Nói 1 câu thả thính đối phương." },
+        { id: 8, text: "Giả sử mình đang là người bán hàng và phải quảng cáo đối phương trong 30 giây." },
+        { id: 9, text: "Cho đối phương chọn một bài hát và cùng hát với nhau." },
+        { id: 10, text: "Chụp một bức ảnh selfie thật tình cảm cùng nhau." },
+        { id: 11, text: "Đăng story một bức ảnh chung kèm một bài hát do đối phương chọn (nếu cả hai đều đồng ý)." },
+        { id: 12, text: "Đặt lại cách xưng hô và phải gọi như vậy đến hết buổi." },
+        { id: 13, text: "Hai người cùng diễn lại một video của Trần Bơm." },
+        { id: 14, text: "Tỏ tình với đối phương bằng giọng tổng tài (nam) hoặc giọng em bé (nữ)." },
+        { id: 15, text: "Kể lại ấn tượng đầu tiên của bạn về đối phương bằng giọng thật nghiêm túc." },
+        { id: 16, text: "Hát cho người kia nghe một bài." },
+        { id: 17, text: "Ôm đối phương từ phía bên cạnh trong lúc cùng nghe một bài hát." },
+        { id: 18, text: "Nói một điều bạn muốn cùng đối phương thực hiện trong buổi hẹn tiếp theo." },
+        { id: 19, text: "Bắt chước theo người kia trong 1 phút." },
+        { id: 20, text: "Nặn đối phương sau đó chụp ảnh." }
+      ];
+
+      const CHOOSE_QUESTIONS = [
+        {
+          id: 1,
+          question: "Nếu được chọn, em sẽ chọn một buổi hẹn lãng mạn hay một buổi hẹn điên rồ đầy trải nghiệm?",
+          optionA: "Một buổi hẹn lãng mạn.",
+          optionB: "Một buổi hẹn điên rồ đầy trải nghiệm."
+        },
+        {
+          id: 2,
+          question: "Nếu được chọn, em sẽ chọn được anh ôm thật lâu hay được anh hôn thật nhẹ?",
+          optionA: "Được anh ôm thật lâu.",
+          optionB: "Được anh hôn thật nhẹ."
+        },
+        {
+          id: 3,
+          question: "Nếu được chọn, em sẽ chọn đi du lịch cùng anh hay ở nhà nấu ăn, xem phim cùng anh?",
+          optionA: "Đi du lịch cùng anh.",
+          optionB: "Ở nhà nấu ăn, xem phim cùng anh."
+        },
+        {
+          id: 4,
+          question: "Nếu được chọn, em sẽ chọn một món quà đắt tiền hay một món quà nhỏ nhưng do anh tự tay làm?",
+          optionA: "Một món quà đắt tiền.",
+          optionB: "Một món quà nhỏ do anh tự tay làm."
+        },
+        {
+          id: 5,
+          question: "Nếu được chọn, em sẽ chọn được anh nhắn tin cả ngày hay được gặp anh một tiếng mỗi ngày?",
+          optionA: "Được anh nhắn tin cả ngày.",
+          optionB: "Được gặp anh một tiếng mỗi ngày."
+        },
+        {
+          id: 6,
+          question: "Nếu được chọn, em sẽ chọn ngắm bình minh cùng anh hay ngắm hoàng hôn cùng anh?",
+          optionA: "Ngắm bình minh cùng anh.",
+          optionB: "Ngắm hoàng hôn cùng anh."
+        },
+        {
+          id: 7,
+          question: "Nếu được chọn, em sẽ chọn một buổi hẹn được anh lên kế hoạch bất ngờ hay tự lên kế hoạch cùng anh?",
+          optionA: "Anh lên kế hoạch bất ngờ.",
+          optionB: "Cùng nhau lên kế hoạch."
+        },
+        {
+          id: 8,
+          question: "Nếu được chọn, em sẽ chọn anh luôn nói lời ngọt ngào hay âm thầm làm những điều quan tâm em?",
+          optionA: "Anh luôn nói lời ngọt ngào.",
+          optionB: "Anh âm thầm làm những điều quan tâm em."
+        },
+        {
+          id: 9,
+          question: "Nếu được chọn, em sẽ chọn nắm tay nhau đi giữa phố đông hay ôm nhau trong xe nghe nhạc?",
+          optionA: "Nắm tay nhau đi giữa phố đông.",
+          optionB: "Ôm nhau trong xe nghe nhạc."
+        },
+        {
+          id: 10,
+          question: "Nếu được chọn, em sẽ chọn được anh khen xinh mỗi ngày hay được anh nhớ những điều nhỏ nhặt về em?",
+          optionA: "Được anh khen xinh mỗi ngày.",
+          optionB: "Được anh nhớ những điều nhỏ nhặt về em."
+        },
+        {
+          id: 11,
+          question: "Nếu được chọn, em sẽ chọn một tình yêu bình yên, ổn định hay một tình yêu có nhiều bất ngờ, cảm xúc?",
+          optionA: "Một tình yêu bình yên, ổn định.",
+          optionB: "Một tình yêu có nhiều bất ngờ, cảm xúc."
+        },
+        {
+          id: 12,
+          question: "Nếu được chọn, em sẽ chọn được anh đọc suy nghĩ của em hay được anh luôn hỏi han để hiểu em?",
+          optionA: "Anh đọc được suy nghĩ của em.",
+          optionB: "Anh luôn hỏi han để hiểu em."
+        },
+        {
+          id: 13,
+          question: "Nếu được chọn, em sẽ chọn cùng anh đi phượt ngẫu hứng hay lên kế hoạch cho một chuyến đi thật chỉn chu?",
+          optionA: "Đi phượt ngẫu hứng.",
+          optionB: "Lên kế hoạch cho chuyến đi chỉn chu."
+        },
+        {
+          id: 14,
+          question: "Nếu được chọn, em sẽ chọn được anh chủ động làm hòa hay được anh ôm em cho đến khi hết giận?",
+          optionA: "Anh chủ động làm hòa.",
+          optionB: "Anh ôm em cho đến khi hết giận."
+        },
+        {
+          id: 15,
+          question: "Nếu được chọn, em sẽ chọn một nụ hôn bất ngờ hay một lời tỏ tình thật chân thành?",
+          optionA: "Một nụ hôn bất ngờ.",
+          optionB: "Một lời tỏ tình thật chân thành."
+        },
+        {
+          id: 16,
+          question: "Nếu được chọn, em sẽ chọn cùng anh trải qua một ngày vui vẻ hay cùng anh vượt qua một ngày thật khó khăn?",
+          optionA: "Cùng anh trải qua một ngày vui vẻ.",
+          optionB: "Cùng anh vượt qua một ngày thật khó khăn."
+        },
+        {
+          id: 17,
+          question: "Nếu được chọn, em sẽ chọn anh là người yêu hài hước luôn chọc em cười hay người trưởng thành luôn khiến em an tâm?",
+          optionA: "Người yêu hài hước luôn chọc em cười.",
+          optionB: "Người trưởng thành luôn khiến em an tâm."
+        },
+        {
+          id: 18,
+          question: "Nếu được chọn, em sẽ chọn được anh chiều theo ý mình hay được anh thỉnh thoảng quyết định mọi thứ để em khỏi phải nghĩ?",
+          optionA: "Anh chiều theo ý mình.",
+          optionB: "Anh thỉnh thoảng quyết định mọi thứ để em khỏi phải nghĩ."
+        },
+        {
+          id: 19,
+          question: "Nếu được chọn, em sẽ chọn lưu giữ thật nhiều ảnh chung hay có thật nhiều kỷ niệm chỉ hai đứa nhớ?",
+          optionA: "Lưu giữ thật nhiều ảnh chung.",
+          optionB: "Có thật nhiều kỷ niệm chỉ hai đứa nhớ."
+        },
+        {
+          id: 20,
+          question: "Nếu được chọn, em sẽ chọn quay lại ngày đầu tiên gặp anh hay nhìn thấy một ngày trong tương lai của hai đứa?",
+          optionA: "Quay lại ngày đầu tiên gặp anh.",
+          optionB: "Nhìn thấy một ngày trong tương lai của hai đứa."
+        }
+      ];
+
+      /* Category configuration */
+      const MODES = {
+        TRUTH: {
+          key: "TRUTH",
+          name: "Truth",
+          title: "TRUTH 💗",
+          icon: "💗",
+          badgeClass: "badge-truth",
+          data: TRUTH_QUESTIONS,
+          type: "text",
+          completeMsg: "Bạn đã mở khóa toàn bộ 20 câu Truth 💗"
+        },
+        DARE: {
+          key: "DARE",
+          name: "Dare",
+          title: "DARE 🎀",
+          icon: "🎀",
+          badgeClass: "badge-dare",
+          data: DARE_CHALLENGES,
+          type: "text",
+          completeMsg: "Bạn đã mở khóa toàn bộ 20 câu Dare 🎀"
+        },
+        CHOOSE: {
+          key: "CHOOSE",
+          name: "Choose",
+          title: "CHOOSE 💞",
+          icon: "💞",
+          badgeClass: "badge-choose",
+          data: CHOOSE_QUESTIONS,
+          type: "choose",
+          completeMsg: "Bạn đã mở khóa toàn bộ 20 câu Choose 💞"
+        }
+      };
+
+      const STORAGE_KEY = "lovePaws:v1:gameState";
+
+      /* ==========================================================================
+         2. STATE MANAGEMENT & SESSION STORAGE
+         ========================================================================== */
+      function createDefaultState() {
+        return {
+          version: 1,
+          currentMode: "TRUTH",
+          currentQuestionId: {
+            TRUTH: null,
+            DARE: null,
+            CHOOSE: null
+          },
+          usedIds: {
+            TRUTH: [],
+            DARE: [],
+            CHOOSE: []
+          },
+          completedModes: {
+            TRUTH: false,
+            DARE: false,
+            CHOOSE: false
+          },
+          chooseSelections: {}, // format: { [questionId]: 'A' | 'B' }
+          soundEnabled: false
+        };
+      }
+
+      let gameState = createDefaultState();
+
+      /* Safely validate and sanitize data retrieved from sessionStorage */
+      function sanitizeState(parsed) {
+        if (!parsed || typeof parsed !== "object") return null;
+
+        const clean = createDefaultState();
+
+        if (["TRUTH", "DARE", "CHOOSE"].includes(parsed.currentMode)) {
+          clean.currentMode = parsed.currentMode;
+        }
+
+        if (parsed.usedIds && typeof parsed.usedIds === "object") {
+          ["TRUTH", "DARE", "CHOOSE"].forEach(function (m) {
+            if (Array.isArray(parsed.usedIds[m])) {
+              const validIds = parsed.usedIds[m].filter(function (id) {
+                return typeof id === "number" && id >= 1 && id <= 20;
+              });
+              clean.usedIds[m] = Array.from(new Set(validIds));
+            }
+          });
+        }
+
+        if (parsed.currentQuestionId && typeof parsed.currentQuestionId === "object") {
+          ["TRUTH", "DARE", "CHOOSE"].forEach(function (m) {
+            const id = parsed.currentQuestionId[m];
+            if (typeof id === "number" && id >= 1 && id <= 20) {
+              clean.currentQuestionId[m] = id;
+              if (!clean.usedIds[m].includes(id)) {
+                clean.usedIds[m].push(id);
+              }
+            }
+          });
+        }
+
+        if (parsed.completedModes && typeof parsed.completedModes === "object") {
+          ["TRUTH", "DARE", "CHOOSE"].forEach(function (m) {
+            clean.completedModes[m] = Boolean(parsed.completedModes[m]);
+          });
+        }
+
+        if (parsed.chooseSelections && typeof parsed.chooseSelections === "object") {
+          Object.keys(parsed.chooseSelections).forEach(function (k) {
+            const val = parsed.chooseSelections[k];
+            if (val === "A" || val === "B") {
+              clean.chooseSelections[k] = val;
+            }
+          });
+        }
+
+        clean.soundEnabled = Boolean(parsed.soundEnabled);
+        return clean;
+      }
+
+      function loadGameState() {
+        try {
+          const raw = sessionStorage.getItem(STORAGE_KEY);
+          if (!raw) return null;
+          const parsed = JSON.parse(raw);
+          return sanitizeState(parsed);
+        } catch (err) {
+          console.warn("Lỗi đọc sessionStorage, khôi phục mặc định:", err);
+          return null;
+        }
+      }
+
+      function saveGameState() {
+        try {
+          sessionStorage.setItem(STORAGE_KEY, JSON.stringify(gameState));
+        } catch (err) {
+          console.warn("Không thể lưu gameState vào sessionStorage:", err);
+        }
+      }
+
+      function resetGame() {
+        try {
+          sessionStorage.removeItem(STORAGE_KEY);
+        } catch (err) {
+          console.warn("Lỗi khi xóa sessionStorage:", err);
+        }
+
+        const soundPreference = gameState.soundEnabled;
+        gameState = createDefaultState();
+        gameState.soundEnabled = soundPreference;
+
+        // Start with a fresh random TRUTH question
+        pickNextQuestion("TRUTH", false);
+        saveGameState();
+        renderGame();
+        showToast("🌸 Đã làm mới lượt chơi! Chúc hai bạn thật vui vẻ!");
+      }
+
+      /* ==========================================================================
+         3. AUDIO SYNTHESIZER (ZERO-DEPENDENCY WEB AUDIO API)
+         ========================================================================== */
+      let audioCtx = null;
+
+      function getAudioContext() {
+        if (!audioCtx) {
+          const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+          if (AudioContextClass) {
+            audioCtx = new AudioContextClass();
+          }
+        }
+        if (audioCtx && audioCtx.state === "suspended") {
+          audioCtx.resume();
+        }
+        return audioCtx;
+      }
+
+      function playSound(type) {
+        if (!gameState.soundEnabled) return;
+        try {
+          const ctx = getAudioContext();
+          if (!ctx) return;
+          const now = ctx.currentTime;
+
+          if (type === "click") {
+            const osc = ctx.createOscillator();
+            const gain = ctx.createGain();
+            osc.type = "sine";
+            osc.frequency.setValueAtTime(520, now);
+            osc.frequency.exponentialRampToValueAtTime(820, now + 0.08);
+            gain.gain.setValueAtTime(0.1, now);
+            gain.gain.exponentialRampToValueAtTime(0.001, now + 0.08);
+            osc.connect(gain);
+            gain.connect(ctx.destination);
+            osc.start(now);
+            osc.stop(now + 0.09);
+          } else if (type === "next") {
+            const freqs = [523.25, 659.25, 783.99]; // C5, E5, G5
+            freqs.forEach(function (f, i) {
+              const osc = ctx.createOscillator();
+              const gain = ctx.createGain();
+              osc.type = "sine";
+              const start = now + i * 0.06;
+              osc.frequency.setValueAtTime(f, start);
+              gain.gain.setValueAtTime(0.12, start);
+              gain.gain.exponentialRampToValueAtTime(0.001, start + 0.22);
+              osc.connect(gain);
+              gain.connect(ctx.destination);
+              osc.start(start);
+              osc.stop(start + 0.24);
+            });
+          } else if (type === "choose") {
+            const osc = ctx.createOscillator();
+            const gain = ctx.createGain();
+            osc.type = "triangle";
+            osc.frequency.setValueAtTime(659.25, now);
+            osc.frequency.exponentialRampToValueAtTime(1046.50, now + 0.16);
+            gain.gain.setValueAtTime(0.14, now);
+            gain.gain.exponentialRampToValueAtTime(0.001, now + 0.24);
+            osc.connect(gain);
+            gain.connect(ctx.destination);
+            osc.start(now);
+            osc.stop(now + 0.25);
+          } else if (type === "complete") {
+            const freqs = [523.25, 659.25, 783.99, 1046.50];
+            freqs.forEach(function (f, i) {
+              const osc = ctx.createOscillator();
+              const gain = ctx.createGain();
+              osc.type = "sine";
+              const start = now + i * 0.09;
+              osc.frequency.setValueAtTime(f, start);
+              gain.gain.setValueAtTime(0.14, start);
+              gain.gain.exponentialRampToValueAtTime(0.001, start + 0.38);
+              osc.connect(gain);
+              gain.connect(ctx.destination);
+              osc.start(start);
+              osc.stop(start + 0.4);
+            });
+          }
+        } catch (e) {
+          console.warn("Âm thanh bị chặn hoặc không được hỗ trợ:", e);
+        }
+      }
+
+      /* ==========================================================================
+         4. QUESTION SELECTION LOGIC
+         ========================================================================== */
+      function getUnusedQuestionIds(modeKey) {
+        const modeConf = MODES[modeKey];
+        if (!modeConf) return [];
+        const used = gameState.usedIds[modeKey] || [];
+        const unused = [];
+        for (let i = 1; i <= modeConf.data.length; i++) {
+          if (!used.includes(i)) {
+            unused.push(i);
+          }
+        }
+        return unused;
+      }
+
+      function pickNextQuestion(modeKey, shouldPlaySound) {
+        const unused = getUnusedQuestionIds(modeKey);
+
+        if (unused.length === 0) {
+          // All 20 questions have already been used!
+          gameState.completedModes[modeKey] = true;
+          saveGameState();
+          playSound("complete");
+          return null;
+        }
+
+        // Pick random from remaining unused IDs
+        const randomIndex = Math.floor(Math.random() * unused.length);
+        const pickedId = unused[randomIndex];
+
+        // Mark as used immediately upon picking
+        if (!gameState.usedIds[modeKey].includes(pickedId)) {
+          gameState.usedIds[modeKey].push(pickedId);
+        }
+        gameState.currentQuestionId[modeKey] = pickedId;
+        gameState.completedModes[modeKey] = false;
+
+        saveGameState();
+
+        if (shouldPlaySound) {
+          playSound("next");
+        }
+
+        return pickedId;
+      }
+
+      function selectMode(modeKey) {
+        if (!MODES[modeKey]) return;
+
+        // If clicking currently active mode, do not change question
+        if (gameState.currentMode === modeKey) {
+          return;
+        }
+
+        playSound("click");
+        gameState.currentMode = modeKey;
+
+        // If this mode has not picked any question yet, pick its first unused question
+        if (gameState.currentQuestionId[modeKey] === null && !gameState.completedModes[modeKey]) {
+          pickNextQuestion(modeKey, false);
+        }
+
+        saveGameState();
+        renderGame();
+      }
+
+      /* ==========================================================================
+         5. CHOOSE OPTION HANDLER
+         ========================================================================== */
+      function handleChooseOption(optionKey) {
+        const curId = gameState.currentQuestionId.CHOOSE;
+        if (!curId) return;
+
+        gameState.chooseSelections[curId] = optionKey;
+        saveGameState();
+        playSound("choose");
+        triggerHeartBurst();
+
+        renderQuestionCard();
+      }
+
+      /* ==========================================================================
+         6. RENDER FUNCTIONS
+         ========================================================================== */
+      const cardContentEl = document.getElementById("cardContent");
+      const nextQuestionBtn = document.getElementById("nextQuestionBtn");
+      const nextBtnText = document.getElementById("nextBtnText");
+      const nextBtnIcon = document.getElementById("nextBtnIcon");
+
+      function renderModeTabs() {
+        const currentMode = gameState.currentMode;
+        ["TRUTH", "DARE", "CHOOSE"].forEach(function (mode) {
+          const tabBtn = document.querySelector(`.tab-btn[data-mode="${mode}"]`);
+          const countBadge = document.getElementById(`tabCount${mode.charAt(0) + mode.slice(1).toLowerCase()}`);
+          const usedCount = (gameState.usedIds[mode] || []).length;
+
+          if (tabBtn) {
+            const isActive = mode === currentMode;
+            tabBtn.classList.toggle("active", isActive);
+            tabBtn.setAttribute("aria-selected", isActive ? "true" : "false");
+          }
+
+          if (countBadge) {
+            countBadge.textContent = `${usedCount}/20`;
+          }
+        });
+      }
+
+      function renderProgress() {
+        ["TRUTH", "DARE", "CHOOSE"].forEach(function (mode) {
+          const capMode = mode.charAt(0) + mode.slice(1).toLowerCase();
+          const itemEl = document.getElementById(`progItem${capMode}`);
+          const textEl = document.getElementById(`progText${capMode}`);
+          const barEl = document.getElementById(`progBar${capMode}`);
+
+          const usedCount = (gameState.usedIds[mode] || []).length;
+          const pct = Math.min(100, Math.round((usedCount / 20) * 100));
+
+          if (itemEl) {
+            itemEl.classList.toggle("active", mode === gameState.currentMode);
+          }
+          if (textEl) {
+            textEl.textContent = `${usedCount}/20`;
+          }
+          if (barEl) {
+            barEl.style.width = `${pct}%`;
+          }
+        });
+      }
+
+      function renderQuestionCard() {
+        const modeKey = gameState.currentMode;
+        const modeConf = MODES[modeKey];
+        const isCompleted = gameState.completedModes[modeKey];
+        const currentId = gameState.currentQuestionId[modeKey];
+        const usedCount = (gameState.usedIds[modeKey] || []).length;
+
+        // Clear card container
+        cardContentEl.innerHTML = "";
+
+        // Re-trigger soft pop-in animation
+        cardContentEl.classList.remove("animate-pop");
+        void cardContentEl.offsetWidth; // trigger reflow
+        cardContentEl.classList.add("animate-pop");
+
+        // CASE 1: Mode is marked completed
+        if (isCompleted) {
+          renderCompletionScreen(modeConf);
+          updateNextButton(true, "Chế độ đã hoàn tất 🎉", "🏆");
+          return;
+        }
+
+        // CASE 2: No question loaded yet (safety fallback)
+        if (!currentId) {
+          cardContentEl.innerHTML = `
+            <div class="card-body">
+              <p class="question-text">Nhấn nút bên dưới để bắt đầu nhận câu hỏi nhé! 🐱💗</p>
+            </div>
+          `;
+          updateNextButton(false, "Bắt đầu khám phá ✨", "✨");
+          return;
+        }
+
+        // CASE 3: Active Question Display
+        const questionItem = modeConf.data.find(function (item) {
+          return item.id === currentId;
+        });
+
+        if (!questionItem) {
+          cardContentEl.innerHTML = `<div class="card-body"><p class="question-text">Không tìm thấy câu hỏi.</p></div>`;
+          return;
+        }
+
+        // Header Meta
+        const metaDiv = document.createElement("div");
+        metaDiv.className = "card-meta";
+
+        const badgeSpan = document.createElement("span");
+        badgeSpan.className = `card-badge ${modeConf.badgeClass}`;
+        badgeSpan.innerHTML = `<span>${modeConf.icon}</span> <span>${modeConf.name} #${questionItem.id}</span>`;
+
+        const counterSpan = document.createElement("span");
+        counterSpan.className = "card-counter";
+        counterSpan.textContent = `Câu ${usedCount}/20`;
+
+        metaDiv.appendChild(badgeSpan);
+        metaDiv.appendChild(counterSpan);
+        cardContentEl.appendChild(metaDiv);
+
+        // Body Content
+        const bodyDiv = document.createElement("div");
+        bodyDiv.className = "card-body";
+
+        const quoteIcon = document.createElement("div");
+        quoteIcon.className = "question-quote-icon";
+        quoteIcon.setAttribute("aria-hidden", "true");
+        quoteIcon.textContent = "❝";
+        bodyDiv.appendChild(quoteIcon);
+
+        const questionP = document.createElement("p");
+        questionP.className = "question-text";
+        questionP.textContent = modeConf.type === "choose" ? questionItem.question : questionItem.text;
+        bodyDiv.appendChild(questionP);
+
+        // Copy Question button
+        const copyBtn = document.createElement("button");
+        copyBtn.className = "copy-btn";
+        copyBtn.type = "button";
+        copyBtn.innerHTML = `<span>📋</span> <span>Sao chép câu này</span>`;
+        copyBtn.addEventListener("click", function () {
+          copyCurrentQuestion(questionP.textContent);
+        });
+        bodyDiv.appendChild(copyBtn);
+
+        cardContentEl.appendChild(bodyDiv);
+
+        // If CHOOSE mode: render Option A and Option B
+        if (modeConf.type === "choose") {
+          const chooseWrap = document.createElement("div");
+          chooseWrap.className = "choose-container";
+
+          const currentSelection = gameState.chooseSelections[currentId] || null;
+
+          // Option A
+          const btnA = createChooseOptionBtn("A", questionItem.optionA, currentSelection === "A");
+          btnA.addEventListener("click", function () {
+            handleChooseOption("A");
+          });
+          chooseWrap.appendChild(btnA);
+
+          // Option B
+          const btnB = createChooseOptionBtn("B", questionItem.optionB, currentSelection === "B");
+          btnB.addEventListener("click", function () {
+            handleChooseOption("B");
+          });
+          chooseWrap.appendChild(btnB);
+
+          // If an option is selected, show sweet romantic feedback
+          if (currentSelection) {
+            const feedbackBox = document.createElement("div");
+            feedbackBox.className = "choose-feedback";
+            const feedbackText = currentSelection === "A"
+              ? "💗 Một lựa chọn thật ngọt ngào! Hãy tâm sự cho người ấy nghe lý do em/anh chọn nhé~"
+              : "💞 Lựa chọn này cũng đáng yêu không kém! Cùng lắng nghe cảm nghĩ của người ấy nào~";
+            feedbackBox.innerHTML = `<span>🐱</span> <span>${feedbackText}</span>`;
+            chooseWrap.appendChild(feedbackBox);
+          }
+
+          cardContentEl.appendChild(chooseWrap);
+        }
+
+        // Update Next Question button text & state
+        const remaining = getUnusedQuestionIds(modeKey);
+        if (remaining.length === 0) {
+          // This is the 20th and final question of this mode
+          updateNextButton(false, "Hoàn thành chế độ 🎉", "🏆");
+        } else {
+          updateNextButton(false, "Câu tiếp theo", "✨");
+        }
+      }
+
+      function createChooseOptionBtn(letter, text, isSelected) {
+        const btn = document.createElement("button");
+        btn.className = `choose-option-btn ${isSelected ? "selected" : ""}`;
+        btn.type = "button";
+        btn.setAttribute("role", "radio");
+        btn.setAttribute("aria-checked", isSelected ? "true" : "false");
+
+        const letterSpan = document.createElement("span");
+        letterSpan.className = "choose-letter";
+        letterSpan.textContent = letter;
+
+        const textSpan = document.createElement("span");
+        textSpan.className = "choose-text";
+        textSpan.textContent = text;
+
+        const checkSpan = document.createElement("span");
+        checkSpan.className = "choose-check";
+        checkSpan.textContent = "💗";
+
+        btn.appendChild(letterSpan);
+        btn.appendChild(textSpan);
+        btn.appendChild(checkSpan);
+
+        return btn;
+      }
+
+      function renderCompletionScreen(modeConf) {
+        const viewDiv = document.createElement("div");
+        viewDiv.className = "completion-view";
+
+        const iconDiv = document.createElement("div");
+        iconDiv.className = "completion-icon";
+        iconDiv.textContent = "🏆✨";
+        viewDiv.appendChild(iconDiv);
+
+        const titleH2 = document.createElement("h2");
+        titleH2.className = "completion-title";
+        titleH2.textContent = modeConf.completeMsg;
+        viewDiv.appendChild(titleH2);
+
+        const descP = document.createElement("p");
+        descP.className = "completion-desc";
+        descP.textContent = "Hai bạn thật tuyệt vời! Tình cảm và sự thấu hiểu đã tăng thêm một bậc rồi đấy. Hãy tiếp tục khám phá các chế độ khác nhé!";
+        viewDiv.appendChild(descP);
+
+        // Quick jump to other uncompleted modes
+        const switchWrap = document.createElement("div");
+        switchWrap.className = "completion-switch-btns";
+
+        const otherModes = ["TRUTH", "DARE", "CHOOSE"].filter(function (m) {
+          return m !== modeConf.key;
+        });
+
+        otherModes.forEach(function (m) {
+          const btn = document.createElement("button");
+          btn.className = "completion-switch-btn";
+          btn.type = "button";
+          btn.textContent = `Chơi ${MODES[m].name} ${MODES[m].icon}`;
+          btn.addEventListener("click", function () {
+            selectMode(m);
+          });
+          switchWrap.appendChild(btn);
+        });
+
+        viewDiv.appendChild(switchWrap);
+
+        // Button to review the 20th question
+        const reviewBtn = document.createElement("button");
+        reviewBtn.className = "btn-reset";
+        reviewBtn.style.marginTop = "6px";
+        reviewBtn.type = "button";
+        reviewBtn.innerHTML = `<span>👁️</span> <span>Xem lại câu cuối cùng</span>`;
+        reviewBtn.addEventListener("click", function () {
+          gameState.completedModes[modeConf.key] = false;
+          saveGameState();
+          renderQuestionCard();
+        });
+        viewDiv.appendChild(reviewBtn);
+
+        cardContentEl.appendChild(viewDiv);
+      }
+
+      function updateNextButton(isDisabled, text, icon) {
+        nextQuestionBtn.disabled = isDisabled;
+        nextBtnText.textContent = text;
+        nextBtnIcon.textContent = icon;
+      }
+
+      function renderGame() {
+        renderModeTabs();
+        renderProgress();
+        renderQuestionCard();
+      }
+
+      /* ==========================================================================
+         7. NEXT QUESTION CLICK HANDLER
+         ========================================================================== */
+      nextQuestionBtn.addEventListener("click", function () {
+        const modeKey = gameState.currentMode;
+        const remaining = getUnusedQuestionIds(modeKey);
+
+        if (remaining.length === 0) {
+          // If already on the final question, trigger completion screen
+          gameState.completedModes[modeKey] = true;
+          saveGameState();
+          playSound("complete");
+          renderGame();
+          triggerHeartBurst();
+          return;
+        }
+
+        pickNextQuestion(modeKey, true);
+        renderGame();
+        triggerHeartBurst();
+      });
+
+      /* ==========================================================================
+         8. MODE TAB LISTENERS
+         ========================================================================== */
+      document.querySelectorAll(".tab-btn").forEach(function (btn) {
+        btn.addEventListener("click", function () {
+          const mode = btn.getAttribute("data-mode");
+          selectMode(mode);
+        });
+      });
+
+      /* ==========================================================================
+         9. SOUND TOGGLE
+         ========================================================================== */
+      const soundToggleBtn = document.getElementById("soundToggleBtn");
+      const soundIcon = document.getElementById("soundIcon");
+      const soundText = document.getElementById("soundText");
+
+      function updateSoundUI() {
+        if (gameState.soundEnabled) {
+          soundIcon.textContent = "🔊";
+          soundText.textContent = "Âm thanh: Bật";
+        } else {
+          soundIcon.textContent = "🔇";
+          soundText.textContent = "Âm thanh: Tắt";
+        }
+      }
+
+      soundToggleBtn.addEventListener("click", function () {
+        gameState.soundEnabled = !gameState.soundEnabled;
+        saveGameState();
+        updateSoundUI();
+        if (gameState.soundEnabled) {
+          getAudioContext();
+          playSound("click");
+          showToast("🔊 Đã bật âm thanh!");
+        } else {
+          showToast("🔇 Đã tắt âm thanh!");
+        }
+      });
+
+      /* ==========================================================================
+         10. RESET CONFIRMATION MODAL
+         ========================================================================== */
+      const resetModal = document.getElementById("resetModal");
+      const resetGameBtn = document.getElementById("resetGameBtn");
+      const cancelResetBtn = document.getElementById("cancelResetBtn");
+      const confirmResetBtn = document.getElementById("confirmResetBtn");
+
+      function openResetModal() {
+        resetModal.classList.add("open");
+        cancelResetBtn.focus();
+      }
+
+      function closeResetModal() {
+        resetModal.classList.remove("open");
+        resetGameBtn.focus();
+      }
+
+      resetGameBtn.addEventListener("click", openResetModal);
+      cancelResetBtn.addEventListener("click", closeResetModal);
+
+      confirmResetBtn.addEventListener("click", function () {
+        closeResetModal();
+        resetGame();
+      });
+
+      resetModal.addEventListener("click", function (e) {
+        if (e.target === resetModal) {
+          closeResetModal();
+        }
+      });
+
+      window.addEventListener("keydown", function (e) {
+        if (e.key === "Escape" && resetModal.classList.contains("open")) {
+          closeResetModal();
+        }
+      });
+
+      /* ==========================================================================
+         11. TOAST NOTIFICATIONS & COPY
+         ========================================================================== */
+      const toastContainer = document.getElementById("toastContainer");
+
+      function showToast(msg) {
+        const toast = document.createElement("div");
+        toast.className = "toast";
+        toast.textContent = msg;
+
+        toastContainer.appendChild(toast);
+
+        setTimeout(function () {
+          toast.classList.add("hide");
+          setTimeout(function () {
+            if (toast.parentNode) {
+              toast.parentNode.removeChild(toast);
+            }
+          }, 260);
+        }, 2200);
+      }
+
+      function copyCurrentQuestion(text) {
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(text).then(function () {
+            showToast("📋 Đã sao chép câu hỏi vào bộ nhớ tạm!");
+            playSound("click");
+          }).catch(function () {
+            fallbackCopy(text);
+          });
+        } else {
+          fallbackCopy(text);
+        }
+      }
+
+      function fallbackCopy(text) {
+        const ta = document.createElement("textarea");
+        ta.value = text;
+        ta.style.position = "fixed";
+        ta.style.opacity = "0";
+        document.body.appendChild(ta);
+        ta.select();
+        try {
+          document.execCommand("copy");
+          showToast("📋 Đã sao chép câu hỏi!");
+          playSound("click");
+        } catch (e) {
+          showToast("❌ Không thể tự động sao chép.");
+        }
+        document.body.removeChild(ta);
+      }
+
+      /* ==========================================================================
+         12. VISUAL PARTICLES (HEART BURSTS)
+         ========================================================================== */
+      function triggerHeartBurst() {
+        const rect = nextQuestionBtn.getBoundingClientRect();
+        const centerX = rect.left + rect.width / 2;
+        const centerY = rect.top + rect.height / 2;
+        const emojis = ["💗", "💖", "🌸", "✨", "🐾", "💞", "🎀"];
+
+        for (let i = 0; i < 7; i++) {
+          const el = document.createElement("div");
+          el.className = "burst-heart";
+          el.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+
+          const angle = (Math.PI * 2 * i) / 7 + (Math.random() * 0.4 - 0.2);
+          const distance = 50 + Math.random() * 45;
+          const tx = Math.cos(angle) * distance;
+          const ty = Math.sin(angle) * distance - 30; // float slightly upward
+          const tr = (Math.random() * 60 - 30) + "deg";
+
+          el.style.left = `${centerX}px`;
+          el.style.top = `${centerY}px`;
+          el.style.setProperty("--tx", `${tx}px`);
+          el.style.setProperty("--ty", `${ty}px`);
+          el.style.setProperty("--tr", tr);
+
+          document.body.appendChild(el);
+
+          setTimeout(function () {
+            if (el.parentNode) {
+              el.parentNode.removeChild(el);
+            }
+          }, 920);
+        }
+      }
+
+      /* Populate subtle background floating hearts */
+      function initBackgroundHearts() {
+        const container = document.getElementById("bgParticles");
+        if (!container) return;
+        const heartIcons = ["💗", "🌸", "🤍", "💖", "✨"];
+        const count = 12;
+
+        for (let i = 0; i < count; i++) {
+          const heart = document.createElement("span");
+          heart.className = "heart-particle";
+          heart.textContent = heartIcons[i % heartIcons.length];
+          heart.style.left = `${(i * 8.2 + Math.random() * 4)}%`;
+          heart.style.animationDelay = `${(Math.random() * 12).toFixed(1)}s`;
+          heart.style.animationDuration = `${(10 + Math.random() * 8).toFixed(1)}s`;
+          heart.style.fontSize = `${(0.8 + Math.random() * 0.7).toFixed(2)}rem`;
+          container.appendChild(heart);
+        }
+      }
+
+      /* ==========================================================================
+         13. APPLICATION INITIALIZATION & RESTORE STATE
+         ========================================================================== */
+      function initApp() {
+        initBackgroundHearts();
+
+        const savedState = loadGameState();
+        if (savedState) {
+          gameState = savedState;
+          if (gameState.currentQuestionId[gameState.currentMode] === null && !gameState.completedModes[gameState.currentMode]) {
+            pickNextQuestion(gameState.currentMode, false);
+          }
+        } else {
+          // New session: pick first TRUTH question
+          pickNextQuestion("TRUTH", false);
+        }
+
+        saveGameState();
+        updateSoundUI();
+        renderGame();
+      }
+
+      // Start application when DOM is ready
+      if (document.readyState === "loading") {
+        document.addEventListener("DOMContentLoaded", initApp);
+      } else {
+        initApp();
+      }
+
+    })();
+  </script>
+</body>
+</html>
