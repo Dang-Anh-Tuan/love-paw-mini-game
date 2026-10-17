@@ -745,12 +745,13 @@
     }
 
     .shuffling-loader {
-      width: 140px;
-      height: 6px;
-      background: rgba(255, 214, 231, 0.6);
+      width: 180px;
+      height: 8px;
+      background: rgba(255, 214, 231, 0.7);
       border-radius: var(--radius-full);
       overflow: hidden;
       position: relative;
+      box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.06);
     }
 
     .shuffling-bar {
@@ -758,16 +759,26 @@
       top: 0;
       left: 0;
       height: 100%;
-      width: 40%;
+      width: 0%;
       background: linear-gradient(90deg, #FF6B9A, #E84A72);
       border-radius: var(--radius-full);
-      animation: barSlide 0.7s ease-in-out infinite;
+      box-shadow: 0 0 8px rgba(232, 74, 114, 0.4);
+      transition: width 0.08s linear;
     }
 
-    @keyframes barSlide {
-      0% { left: -40%; width: 30%; }
-      50% { left: 35%; width: 50%; }
-      100% { left: 100%; width: 30%; }
+    .shuffling-countdown-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 5px 14px;
+      margin-top: 12px;
+      border-radius: var(--radius-full);
+      background: rgba(255, 107, 154, 0.12);
+      border: 1px solid rgba(255, 107, 154, 0.28);
+      font-size: 0.82rem;
+      font-weight: 700;
+      color: var(--color-cherry);
+      letter-spacing: 0.3px;
     }
 
     .game-card.animate-reveal {
@@ -1863,6 +1874,9 @@
       }
 
       function resetGame() {
+        if (typeof clearActiveShuffle === "function") {
+          clearActiveShuffle();
+        }
         try {
           sessionStorage.removeItem(STORAGE_KEY);
         } catch (err) {
@@ -1972,6 +1986,17 @@
               osc.start(start);
               osc.stop(start + 0.09);
             });
+          } else if (type === "shuffle-tick") {
+            const osc = ctx.createOscillator();
+            const gain = ctx.createGain();
+            osc.type = "sine";
+            osc.frequency.setValueAtTime(540 + Math.random() * 160, now);
+            gain.gain.setValueAtTime(0.04, now);
+            gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.05);
+            osc.connect(gain);
+            gain.connect(ctx.destination);
+            osc.start(now);
+            osc.stop(now + 0.055);
           }
         } catch (e) {
           console.warn("Âm thanh bị chặn hoặc không được hỗ trợ:", e);
@@ -1982,6 +2007,20 @@
          4. QUESTION SELECTION & TRUE RANDOM SHUFFLE LOGIC
          ========================================================================== */
       let isShuffling = false;
+      let activeShuffleTimeout = null;
+      let activeShuffleInterval = null;
+
+      function clearActiveShuffle() {
+        if (activeShuffleTimeout) {
+          clearTimeout(activeShuffleTimeout);
+          activeShuffleTimeout = null;
+        }
+        if (activeShuffleInterval) {
+          clearInterval(activeShuffleInterval);
+          activeShuffleInterval = null;
+        }
+        isShuffling = false;
+      }
 
       // True random generator with CSPRNG fallback
       function getRandomInt(max) {
@@ -2059,7 +2098,7 @@
         const title = document.createElement("h3");
         title.className = "shuffling-title";
         title.id = "shufflingTitle";
-        title.textContent = `Đang chọn ngẫu nhiên ${modeConf.name}...`;
+        title.textContent = `Đang chọn ngẫu nhiên ${modeConf ? modeConf.name : ""}...`;
         view.appendChild(title);
 
         const sub = document.createElement("p");
@@ -2072,42 +2111,90 @@
         loader.className = "shuffling-loader";
         const bar = document.createElement("div");
         bar.className = "shuffling-bar";
+        bar.id = "shufflingBar";
         loader.appendChild(bar);
         view.appendChild(loader);
+
+        const countdown = document.createElement("div");
+        countdown.className = "shuffling-countdown-pill";
+        countdown.id = "shufflingCountdown";
+        countdown.innerHTML = `<span>⏳</span> <span>Đang quay ngẫu nhiên... <b id="shufflingSeconds">5</b>s</span>`;
+        view.appendChild(countdown);
 
         cardContentEl.appendChild(view);
       }
 
       function triggerRandomShuffle(modeKey) {
+        clearActiveShuffle();
         isShuffling = true;
-        updateNextButton(true, "Đang quay ngẫu nhiên 🎲", "🎲");
+
+        const SHUFFLE_DURATION_MS = 5000; // Thời gian random khoảng 5s tạo sự hồi hộp, kịch tính
+        const startTime = Date.now();
+
+        updateNextButton(true, "Đang quay... 5s 🎲", "🎲");
         renderShufflingView(modeKey);
         playSound("shuffle");
 
-        const diceIcons = ["🎲", "🐾", "💗", "✨", "🎀", "💞", "🌸"];
+        const diceIcons = ["🎲", "🐾", "💗", "✨", "🎀", "💞", "🌸", "💌", "💫", "🎯"];
+        const modeConf = MODES[modeKey];
+        const modeName = modeConf ? modeConf.name : "";
         const teases = [
-          `Đang chọn ngẫu nhiên ${MODES[modeKey].name}...`,
-          "Mèo con đang xáo thẻ định mệnh...",
-          "Một điều bất ngờ sắp xuất hiện cho hai bạn..."
+          `Đang chọn ngẫu nhiên ${modeName}... 🎲`,
+          "Mèo con đang xáo thẻ định mệnh... 🐾",
+          "Hồi hộp quá, ai sẽ là người thực hiện đây? 💖",
+          "Một điều bất ngờ sắp xuất hiện cho hai bạn... ✨",
+          "Chuẩn bị tinh thần đón nhận thử thách nhé! 🎀",
+          "Định mệnh sắp hé lộ... Chỉ còn tích tắc! 🌸"
         ];
 
         let tick = 0;
-        const intervalId = setInterval(function () {
+        let lastSeconds = 5;
+
+        activeShuffleInterval = setInterval(function () {
           tick++;
+          const elapsed = Date.now() - startTime;
+          const remainingMs = Math.max(0, SHUFFLE_DURATION_MS - elapsed);
+          const remainingSec = Math.max(1, Math.ceil(remainingMs / 1000));
+          const progressPct = Math.min(100, (elapsed / SHUFFLE_DURATION_MS) * 100);
+
           const diceEl = document.getElementById("shufflingDice");
           const titleEl = document.getElementById("shufflingTitle");
+          const secEl = document.getElementById("shufflingSeconds");
+          const barEl = document.getElementById("shufflingBar");
+
+          // Xoay icon xúc xắc liên tục
           if (diceEl) {
             diceEl.textContent = diceIcons[tick % diceIcons.length];
           }
-          if (titleEl && tick % 2 === 0) {
-            titleEl.textContent = teases[(tick / 2) % teases.length];
-          }
-        }, 90);
 
-        setTimeout(function () {
-          clearInterval(intervalId);
+          // Cập nhật thanh tiến trình 5s mượt mà
+          if (barEl) {
+            barEl.style.width = `${progressPct}%`;
+          }
+
+          // Cập nhật số giây đếm ngược
+          if (secEl && remainingSec !== lastSeconds) {
+            secEl.textContent = remainingSec;
+            updateNextButton(true, `Đang quay... ${remainingSec}s 🎲`, "🎲");
+          }
+
+          // Cập nhật thông điệp kích thích hồi hộp
+          if (titleEl) {
+            const teaseIndex = Math.min(teases.length - 1, Math.floor((elapsed / SHUFFLE_DURATION_MS) * teases.length));
+            titleEl.textContent = teases[teaseIndex];
+          }
+
+          // Âm thanh tích tắc nhẹ nhàng vui nhộn
+          if (tick % 4 === 0 && remainingMs > 250) {
+            playSound("shuffle-tick");
+          }
+
+          lastSeconds = remainingSec;
+        }, 80);
+
+        activeShuffleTimeout = setTimeout(function () {
+          clearActiveShuffle();
           pickNextQuestion(modeKey, false);
-          isShuffling = false;
           playSound("next");
           renderGame();
           triggerHeartBurst();
@@ -2115,7 +2202,7 @@
           // Card pop-in reveal effect
           cardContentEl.classList.remove("animate-pop");
           cardContentEl.classList.add("animate-reveal");
-        }, 650);
+        }, SHUFFLE_DURATION_MS);
       }
 
       function selectMode(modeKey) {
